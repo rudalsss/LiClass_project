@@ -1,0 +1,216 @@
+@charset "UTF-8";
+
+/* table 수정 */
+
+.thth{
+	text-align: center; 
+	/* border-right: 1px solid black; */
+
+	}
+.tdtd{
+	font-weight: 100;
+	
+}
+
+#reserveModalTable{
+	border-radius : 5px;
+	margin:10px;
+	width: -webkit-fill-available;
+    height: 100px;
+    text-align: center;
+}
+
+
+/* 은아,지민  */
+#colorStar{
+  		direction: rtl;
+		unicode-bidi: bidi-override;
+  		color: #555; 
+  	}
+.row>*{
+	width: 80%;
+}
+/* 클래스 상세페이지에서만 로그인창이 이상해서 별도 설정 */
+#login-pop-modal .modal_content {
+  top: 460px;height: 699px;
+}
+.wrap-login100{
+	height: 699px;
+}
+	
+.section{
+	padding: 20px;
+    width: 60%;
+}
+.nav-tabs { border-bottom: 2px solid #DDD; }
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover { border-width: 0; }
+.nav-tabs > li > a { border: none; color: #666; }
+.nav-tabs > li.active > a, .nav-tabs > li > a:hover { border: none; color: #555 !important; background: transparent; }
+.nav-tabs > li > a::after { content: ""; background: #555; height: 2px; position: absolute; width: 100%; left: 0px; bottom: -1px; transition: all 250ms ease 0s; transform: scale(0); }
+.nav-tabs > li.active > a::after, .nav-tabs > li:hover > a::after { transform: scale(1); }
+.tab-nav > li > a::after { background: #21527d none repeat scroll 0% 0%; color: #fff; }
+.tab-pane { padding: 15px 0; }
+.tab-content{padding:20px}
+
+.card { padding: 20px; background:#ffffff00 none repeat scroll 0% 0%; margin-bottom: 30px; }
+
+
+.card{
+	width:80%;
+}
+.class-content{
+	margin:30px;
+}
+.class-content h5{
+	font-size: 15px;
+}
+.class-content h5 *{
+	margin:0px 5px;
+}
+.class-content h6{
+	font-size: 12px;
+	margin:15px 0px;
+}
+.class-content span{
+	margin:0px 15px;
+	padding: 0px 10px;
+}
+.class-content span a{
+	margin:0px 3px;
+}
+.info{
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+}
+
+/* #sns-share a{
+	margin:10px;
+} */
+
+.services p {
+    color: #6c7279;
+    font-size: 13px;
+    font-weight: 400;
+    margin-top: 3px;
+}
+
+#sticky-nav{
+	width:30%;
+	height: 70%;
+	z-index:1;
+	position: absolute;right: 20px;bottom:50px; z-index: 0; top:160px;
+}
+
+.main-white-button a {
+  display: inline-block;
+  background-color: #ffffff00;
+  font-size: 15px;
+  font-weight: 400;
+  color: black;
+  text-transform: capitalize;
+  padding: 12px 25px;
+  border-radius: 7px;
+  letter-spacing: 0.25px;
+  transition: all .3s;
+}
+
+.main-white-button a i {
+  margin-right: 10px;
+  width: 22px;
+  height: 22px;
+  background-color: #555;
+  color: #fff;
+  border-radius: 50%;
+  display: inline-block;
+  text-align: center;
+  font-size: 12px;
+  line-height: 22px;
+}
+
+.main-white-button a:hover {
+  background-color: #555;
+  color: #fff;
+}
+.class-booking-form{
+	background: #ffffff00;
+    padding: 20px;
+    border: solid 1px lightgray;
+    margin-top: 38px;
+    /* border-radius: 15px; */
+}
+
+
+.button-41 {
+  position: relative;
+  outline: none;
+  text-decoration: none;
+  border-radius: 50px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  text-transform: uppercase;
+  height: 60px;
+  width: 210px;
+  opacity: 1;
+  background-color: #ffffff;
+  border: 1px solid #555;
+}
+.button-41 span {
+  color: #555;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.7px;
+}
+.button-41:hover {
+  animation: rotate 0.7s ease-in-out both;
+   background-color: #ffffff;
+   
+}
+.button-41:hover span {
+  animation: storm 0.7s ease-in-out both;
+  animation-delay: 0.06s;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg) translate3d(0, 0, 0);
+  }
+  25% {
+    transform: rotate(3deg) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: rotate(-3deg) translate3d(0, 0, 0);
+  }
+  75% {
+    transform: rotate(1deg) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: rotate(0deg) translate3d(0, 0, 0);
+  }
+}
+@keyframes storm {
+  0% {
+    transform: translate3d(0, 0, 0) translateZ(0);
+  }
+  25% {
+    transform: translate3d(4px, 0, 0) translateZ(0);
+  }
+  50% {
+    transform: translate3d(-3px, 0, 0) translateZ(0);
+  }
+  75% {
+    transform: translate3d(2px, 0, 0) translateZ(0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) translateZ(0);
+  }
+}
+
+
+
+
+
+
+

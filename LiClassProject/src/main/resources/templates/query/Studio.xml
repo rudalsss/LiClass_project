@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.admin.management.studio.dao.StudioDao"><!-- 오류를 방지하기위해 DAO꺼 복사붙여넣기 -->
+	<!-- 게시판 리스트 기본 조회  
+	<select id="boardList" parameterType="board" resultType="board">
+		SELECT b_num, b_name, b_title, to_char(b_date,'YYYY-MM-DD') as b_date
+		FROM spring_board
+		<where>
+			<if test="search=='b_title'">
+				<![CDATA[ b_title LIKE '%'|| #{keyword} ||'%' ]]>					
+			</if>
+			<if test="search=='b_content'">
+				<![CDATA[ b_content LIKE '%'|| #{keyword} ||'%' ]]>					
+			</if>
+			<if test="search=='b_name'">
+				<![CDATA[ b_name LIKE '%'|| #{keyword} ||'%' ]]>					
+			</if>
+		</where>
+		ORDER BY b_num desc
+	</select> -->
+	
+	<!-- 전체 레코드 수 조회 
+	<select id="boardListCnt" parameterType="board" resultType="int">
+		SELECT count(*) FROM spring_board 
+		<trim prefix=" where (" suffix=")" >
+			<if test="search=='b_title'">
+				<![CDATA[ b_title LIKE '%'|| #{keyword} ||'%' ]]>
+			</if>
+			<if test="search=='b_content'">
+				<![CDATA[ b_content LIKE '%'|| #{keyword} ||'%' ]]>
+			</if>
+			<if test="search=='b_name'">
+				<![CDATA[ b_name LIKE '%'|| #{keyword} ||'%' ]]>
+			</if>
+		</trim>
+	</select> -->
+	
+	<!-- 전체 레코드 수 조회 -->
+	<select id="studioListCnt" parameterType="studio" resultType="int">
+		SELECT count(*) FROM li_studio 
+		<trim prefix=" where (" suffix=")" >
+		<include refid="studioSearch"></include>
+		</trim>
+	</select>
+	
+	
+	<sql id="studioSearch">
+		<if test="search=='s_title'">
+			<![CDATA[ s_title LIKE '%'|| #{keyword} ||'%' ]]>
+		</if>
+		<if test="search=='s_content'">
+			<![CDATA[ s_content LIKE '%'|| #{keyword} ||'%' ]]>	
+		</if>
+		<if test="search=='s_date'">
+			<![CDATA[ to_char(s_date,'YYYY-MM-DD') between #{start_date} and #{end_date}  ]]>	
+		</if>
+	</sql>
+	
+	<!-- 게시판 리스트 조회(페이징 처리와 검색 처리) 및 댓글 갯수 구하기 -->
+	<!-- 힌트(hint): 개발자가 데이터베이스에 어떤 방식으로 실행해 줘야 하는지를 명시하기 때문에 강제성을 부여한다. 
+	     구문: /*+로 시작하고 */ 로 종료된다. /*+ INDEX_DESC(테이블명 인덱스명[기본키 설정시 제약조건명으로 인덱스 자동 생성]) */ -->
+	<!--rownum: SQL이 실행된 결과에 넘버링해준다. -->
+	
+	
+	<select id="studioList" parameterType="studio" resultType="studio">
+		<![CDATA[ 
+		SELECT 
+        	s_no, s_title, s_content, to_char(s_date,'YYYY-MM-DD') as s_date, s_thumb, s_file
+   		FROM (
+            	SELECT /*+ INDEX_DESC(li_studio li_studio_pk) */ 
+                	rownum as rnum, s_no, s_title, s_content, s_date, s_thumb, s_file
+            	FROM li_studio 
+            	WHERE ]]>
+            	<trim prefix="(" suffix=") AND " prefixOverrides="AND">
+            		<include refid="studioSearch"></include>
+            	</trim> 
+            <![CDATA[	rownum <= #{pageNum} * #{amount} 
+        	 ) studiolist
+    	 WHERE rnum > (#{pageNum} - 1) * #{amount} 
+    	 ]]>
+	</select>
+	
+	
+	<select id="clientStudioList" parameterType="studio" resultType="studio">
+		
+		SELECT /*+ INDEX_DESC(li_studio li_studio_pk) */
+        	s_no, s_title, s_content, to_char(s_date,'YYYY-MM-DD') as s_date, s_thumb, s_file
+   		FROM li_studio 
+	</select>
+	
+	
+	<!-- 게시물 등록 - 1
+	<insert id="boardInsert" parameterType="board">
+		insert into spring_board(b_num, b_name, b_title, b_content, b_pwd)
+		values(spring_board_seq.nextval, #{b_name}, #{b_title}, #{b_content}, #{b_pwd})
+	</insert> -->
+	
+	<!-- 게시물 등록 - 2 -->
+	<insert id="studioInsert" parameterType="studio">
+		/* Studio - studioInsert*/
+		<selectKey keyProperty="s_no" resultType="int" order="BEFORE">
+			select li_studio_seq.nextval from dual
+		</selectKey>
+		insert into li_studio(s_no, ct_bizno, s_title, s_content, s_thumb, s_file)
+		values(#{s_no}, #{ct_bizno}, #{s_title}, #{s_content}, #{s_thumb}, #{s_file})
+	</insert>
+	
+	<!-- 상세 페이지를 위한 게시물 조회 -->
+	<select id="studioDetail" parameterType="studio" resultType="studio">
+		/* Studio - studioDetail */
+		select
+				s_no, ct.ct_name, s_title, s_content,
+				to_char(s_date, 'YYYY-MM-DD HH24:MI:SS') as s_date, s_thumb, s_file
+		from li_center ct inner join li_studio s
+		on ct.ct_bizno = s.ct_bizno
+		where s_no = #{s_no}
+	</select>
+	
+	
+	<!-- 게시물 수정 -->
+	<update id="studioUpdate" parameterType="studio">
+	/* Studio - studioUpdate */
+	UPDATE li_studio
+	SET s_title = #{s_title},
+		ct_bizno = #{ct_bizno},
+		s_content = #{s_content},
+		s_date = sysdate
+		
+		<if test="s_thumb != ''">
+			, s_thumb = #{s_thumb}
+		</if>
+		<if test="s_file != ''">
+			, s_file = #{s_file}
+		</if>
+		WHERE s_no = #{s_no}
+	</update>
+	
+	<!-- 게시물 삭제 -->
+	<delete id="studioDelete" parameterType="studio">
+	/* Studio - studioDelete */
+	DELETE FROM li_studio WHERE s_no = #{s_no}
+	</delete>
+	
+</mapper>

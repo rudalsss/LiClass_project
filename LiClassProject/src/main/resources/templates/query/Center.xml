@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.admin.management.center.dao.CenterDAO">
+	
+	<!-- 전체 레코드 수 조회 -->
+	<select id="centerListCnt" parameterType="center" resultType="int">
+		SELECT count(*) FROM li_center 
+		<trim prefix=" where (" suffix=")" >
+		<include refid="centerSearch"></include>
+		</trim>
+	</select>
+	
+	
+	<sql id="centerSearch">
+		<if test="search=='ct_name'">
+			<![CDATA[ ct_name LIKE '%'|| #{keyword} ||'%' ]]>
+		</if>
+		<if test="search=='ct_mainart'">
+			<![CDATA[ ct_mainart LIKE '%'|| #{keyword} ||'%' ]]>	
+		</if>
+		<if test="search=='ct_date'">
+			<![CDATA[ to_char(ct_date,'YYYY-MM-DD') between #{start_date} and #{end_date}  ]]>	
+		</if>
+	</sql>
+	
+	<!-- 게시판 리스트 조회(페이징 처리와 검색 처리) 및 댓글 갯수 구하기 -->
+	<!-- 힌트(hint): 개발자가 데이터베이스에 어떤 방식으로 실행해 줘야 하는지를 명시하기 때문에 강제성을 부여한다. 
+	     구문: /*+로 시작하고 */ 로 종료된다. /*+ INDEX_DESC(테이블명 인덱스명[기본키 설정시 제약조건명으로 인덱스 자동 생성]) */ -->
+	<!--rownum: SQL이 실행된 결과에 넘버링해준다. -->
+	<select id="centerList" parameterType="center" resultType="center">
+		<![CDATA[ 
+		SELECT 
+        	ct_bizno, ct_name, ct_opbiz_ym, ct_intro, ct_mainart, ct_zipno, ct_addr, ct_detail_addr,
+        	ct_tel, ct_hmpg_addr, to_char(ct_date,'YYYY-MM-DD') as ct_date
+   		FROM (
+            	SELECT 
+                	rownum as rnum, ct_bizno, ct_name, ct_opbiz_ym, ct_intro, ct_mainart, ct_zipno, ct_addr, ct_detail_addr,ct_tel, ct_hmpg_addr,ct_date
+            	FROM li_center
+            	WHERE ]]>
+            	<trim prefix="(" suffix=") AND " prefixOverrides="AND">
+            		<include refid="centerSearch"></include>
+            	</trim> 
+            <![CDATA[	rownum <= #{pageNum} * #{amount} 
+        	 ) centerlist
+    	 WHERE rnum > (#{pageNum} - 1) * #{amount} 
+    	 ]]>
+	</select>
+	
+	
+	<!-- 게시물 등록 - 1
+	<insert id="boardInsert" parameterType="board">
+		insert into spring_board(b_num, b_name, b_title, b_content, b_pwd)
+		values(spring_board_seq.nextval, #{b_name}, #{b_title}, #{b_content}, #{b_pwd})
+	</insert> -->
+	
+	<!-- 게시물 등록 - 2 -->
+	<insert id="centerInsert" parameterType="center">
+		/* Center - centerInsert*/
+		
+		insert into li_center(ct_bizno, ct_name, ct_opbiz_ym, ct_intro, ct_mainart, ct_zipno, ct_addr, ct_detail_addr, ct_tel, ct_hmpg_addr)
+		values(#{ct_bizno}, #{ct_name}, #{ct_opbiz_ym}, #{ct_intro}, #{ct_mainart}, #{ct_zipno}, #{ct_addr}, #{ct_detail_addr}, #{ct_tel}, #{ct_hmpg_addr})
+	</insert>
+	<!-- 상세 페이지를 위한 게시물 조회 -->
+	<select id="centerDetail2" parameterType="center" resultType="center">
+		select
+				ct_bizno, ct_name, ct_opbiz_ym, ct_intro, ct_mainart, ct_zipno, ct_addr, ct_detail_addr, ct_tel, ct_hmpg_addr,
+				to_char(ct_date, 'YYYY-MM-DD HH24:MI:SS') as ct_date
+		from li_center
+		where ct_bizno = #{ct_bizno}
+	</select>
+	
+	<!-- 게시물 수정 -->
+	<update id="centerUpdate" parameterType="center">
+	/* Center - centerUpdate */
+	UPDATE li_center
+	SET ct_name = #{ct_name},
+		ct_opbiz_ym = #{ct_opbiz_ym},
+		ct_intro = #{ct_intro},
+		ct_mainart = #{ct_mainart},
+		ct_zipno = #{ct_zipno},
+		ct_addr = #{ct_addr},
+		ct_detail_addr = #{ct_detail_addr},
+		ct_tel = #{ct_tel},
+		ct_hmpg_addr = #{ct_hmpg_addr},
+		ct_date = sysdate
+		
+		WHERE ct_bizno = #{ct_bizno}
+	</update>
+	
+	<!-- 게시물 삭제 -->
+	<delete id="centerDelete" parameterType="center">
+	/* Center - centerDelete */
+	DELETE FROM li_center WHERE ct_bizno = #{ct_bizno}
+	</delete>
+	
+	
+	<select id="centerNameList" resultType="center">
+	select ct_name, ct_bizno
+	from li_center
+	</select>
+	
+	<!-- 페이징처리되지 않은 list -->
+	<select id="centerlist2" parameterType="Center" resultType="Center">
+		select * from li_center
+	</select>
+	
+	
+	<!-- 은아) li_class의 ct_bizno로 센터 상세정보 조회 -->
+	<select id="clientCenterDetail" parameterType="String" resultType="center">
+		select  ct_bizno, ct_name, ct_opbiz_ym, ct_intro, ct_mainart, ct_zipno, ct_addr, ct_detail_addr, ct_tel, ct_hmpg_addr,
+				to_char(ct_date, 'YYYY-MM-DD HH24:MI:SS') as ct_date
+		from li_center
+		where ct_bizno = #{ct_bizno}
+	</select>
+	
+	
+</mapper>

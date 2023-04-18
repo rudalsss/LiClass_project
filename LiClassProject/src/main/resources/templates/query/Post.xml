@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.client.post.dao.PostDAO">
+	
+	<!-- 클래스일지 Create -->
+	<insert id="postInsert" parameterType="Post">
+		<selectKey keyProperty="post_no" resultType="int" order="BEFORE">
+			select li_post_seq.nextval from dual
+		</selectKey>
+		insert into li_post(post_no,user_no,post_title,post_content,post_img,post_status)
+		values(#{post_no}, #{user_no}, #{post_title}, #{post_content}, #{post_img},0)
+	</insert>
+	
+	<!-- 클래스일지 Read(List) -->
+	
+		<!-- 클래스일지 Read(List) -->
+		<select id="postList" resultType="Post">
+			select post_no,user_no,post_title,post_content,post_likes,post_img,post_status,
+			to_char(post_regdate, 'YYYY-MM-DD') as post_regdate,
+			to_char(post_update, 'YYYY-MM-DD') as post_update 
+			from li_post
+			order by post_regdate desc
+		</select>
+
+		<!-- 클래스일지 Read(Detail) -->
+		<select id="postDetail" parameterType="Post" resultType="Post">
+			select post_no,user_no,post_title,post_content,post_likes,post_img,post_status,
+			to_char(post_regdate, 'YYYY-MM-DD') as post_regdate,
+			to_char(post_update, 'YYYY-MM-DD') as post_update 
+			from li_post
+			where post_no = #{post_no}
+			order by post_regdate desc
+		</select>
+	
+	
+	<!-- 클래스일지 Update -->
+	<update id="postUpdate" parameterType="Post">
+		update li_post
+		set post_title = #{post_title},
+			post_content = #{post_content},
+			post_status = #{post_status},
+			post_update = sysdate
+			<if test="post_img != ''">
+				, post_img = #{post_img}
+			</if>
+			where post_no = #{post_no}
+	</update>
+	
+	<!-- 클래스일지 Delete -->
+	<delete id="postDelete" parameterType="Post">
+		delete from li_post
+		where post_no = #{post_no}
+	</delete>
+	
+	<!-- 경민) 클래스 기준 클래스 일지 리스트 조회 -->
+	<select id="postOfClass" parameterType="int" resultType="Post">
+		select * from li_post where c_no = #{c_no}
+	</select>
+	
+</mapper>

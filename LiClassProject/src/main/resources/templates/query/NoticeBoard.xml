@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.admin.management.noticeboard.dao.NoticeBoardDao">
+
+    <sql id="noticeSearch">
+        <if test="search=='qna_title'">
+            <![CDATA[qna_title like '%' || #{keyword} || '%']]>
+        </if>
+        <if test="search=='qna_content'">
+            <![CDATA[qna_content like '%' || #{keyword} || '%']]>
+        </if>
+        <if test="search=='qna_date'">
+            <![CDATA[to_char(qna_date, 'YYYY-MM-DD') between #{start_date} and #{end_date}]]>
+        </if>
+    </sql>
+
+    <select id="noticeBoardList" parameterType="qnaBoard" resultType="qnaBoard">
+        select a.qna_no, a.admin_no, a.user_no, a.qna_title, a.qna_content, a.qna_category, to_char(a.qna_date, 'YYYY-MM-DD')as qna_date, a.qna_top_state, b.admin_no, b.admin_name
+        from li_qna a, li_admin b
+        where a.admin_no = b.admin_no(+) and qna_category = '공지'
+        order by qna_top_state desc, qna_no desc
+    </select>
+
+    <!--전체 레코드 수 조회-->
+    <select id="noticeBoardCnt" parameterType="qnaBoard" resultType="int">
+        select count(*) from li_qna
+        <trim prefix=" where (" suffix=")">
+            <include refid="noticeSearch"></include>
+        </trim>
+    </select>
+
+    <!--공지게시판 글 작성쿼리문 -->
+    <insert id="noticeBoardInsert" parameterType="qnaBoard">
+        insert into li_qna(qna_no, qna_title, qna_content, qna_category, qna_top_state, admin_no)
+        values(li_qna_seq.nextval, #{qna_title}, #{qna_content}, '공지' , #{qna_top_state}, #{admin_no})
+    </insert>
+
+    <!--공지게시판 상세페이지 조회 쿼리문-->
+    <select id="noticeBoardDetail" parameterType="qnaBoard" resultType="qnaBoard">
+        select a.qna_no, a.admin_no, a.user_no, a.qna_title, a.qna_content, a.qna_category, to_char(a.qna_date, 'YYYY-MM-DD')as qna_date, to_char(a.qna_date_fix, 'YYYY-MM-DD')as qna_date_fix, a.qna_top_state, b.admin_no, b.admin_name
+        from li_qna a, li_admin b
+        where a.admin_no = b.admin_no(+) and qna_no = #{qna_no}
+    </select>
+
+    <!--공지게시판 글 수정 쿼리문-->
+    <update id="noticeBoardUpdate" parameterType="qnaBoard">
+        update li_qna
+        set qna_title = #{qna_title},
+            qna_content = #{qna_content},
+            qna_date_fix = sysdate
+            <if test="admin_no != 0">
+                , admin_no = #{admin_no}
+            </if>
+        where qna_no = #{qna_no}
+    </update>
+    <!--공지게시판 글 삭제 쿼리문-->
+    <delete id="noticeBoardDelete" parameterType="qnaBoard">
+        delete from li_qna where qna_no = #{qna_no}
+    </delete>
+
+    <!--공지게시판 상태값 변경 쿼리문-->
+    <update id="noticeStateUpdate" parameterType="qnaBoard">
+        update li_qna
+        set qna_top_state =
+                case
+                    when qna_top_state = 0 then 1
+                    when qna_top_state = 1 then 0
+                    end
+        where qna_no = #{qna_no}
+    </update>
+
+
+</mapper>
+

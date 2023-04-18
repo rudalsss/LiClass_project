@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.admin.management.qnaboard.dao.QnaBoardDao">
+
+
+    <!--문의게시판 리스트 조회 쿼리문-->
+    <select id="qnaBoardList" parameterType="qnaBoard" resultType="qnaBoard">
+        <![CDATA[
+        SELECT a.qna_no, a.user_no, a.admin_no, a.qna_title, a.qna_content, a.qna_category,
+               TO_CHAR(a.qna_date, 'YYYY-MM-DD') AS qna_date, a.qna_top_state, a.qna_group,
+               a.qna_indent, a.qna_step, b.user_name, c.admin_name
+        FROM li_qna a
+                 LEFT OUTER JOIN li_user b ON a.user_no = b.user_no
+                 LEFT OUTER JOIN li_admin c ON a.admin_no = c.admin_no
+        WHERE (qna_category <> '공지')
+           OR (qna_category = '공지' AND qna_top_state = 1 AND a.qna_no IN (
+            SELECT qna_no FROM (
+                                   SELECT qna_no FROM li_qna WHERE qna_category = '공지' AND qna_top_state = 1
+                                   ORDER BY qna_date DESC, qna_no DESC
+                                       FETCH FIRST 5 ROWS ONLY
+                               )
+        ))
+        ORDER BY qna_top_state DESC, qna_group DESC, qna_indent ASC, qna_step DESC
+
+        ]]>
+    </select>
+
+    <!--문의게시판 상세페이지 조회 쿼리문-->
+    <select id="qnaBoardDetail" parameterType="qnaBoard" resultType="qnaBoard">
+        select a.qna_no, a.user_no, a.admin_no, a.qna_title, a.qna_content, a.qna_category, to_char(a.qna_date, 'YYYY-MM-DD')as qna_date, to_char(a.qna_date_fix, 'YYYY-MM-DD')as qna_date_fix, a.qna_top_state, a.qna_group, a.qna_indent, b.user_no, b.user_name, c.admin_no, c.admin_name
+        from li_qna a, li_user b, li_admin c
+        where a.user_no = b.user_no(+) and qna_no = #{qna_no}
+    </select>
+
+    <!--문의게시판 답변 조회 쿼리문-->
+    <select id="qnaBoardAnswerDetail" parameterType="qnaBoard" resultType="qnaBoard">
+        select a.qna_no, a.user_no, a.admin_no, a.qna_title, a.qna_content, a.qna_category, to_char(a.qna_date, 'YYYY-MM-DD')as qna_date, to_char(a.qna_date_fix, 'MM-DD')as qna_date_fix, a.qna_top_state, a.qna_group, a.qna_indent, b.user_no, b.user_name, c.admin_no, c.admin_name
+        from li_qna a, li_user b, li_admin c
+        where a.user_no = b.user_no(+) and qna_group = #{qna_group} and qna_category = '답변'
+    </select>
+
+
+    <!--문의게시판 글 작성쿼리문 -->
+    <insert id="qnaBoardInsert" parameterType="qnaBoard">
+        insert into li_qna(qna_no, qna_title, qna_content, qna_category, qna_group, user_no)
+        values(li_qna_seq.nextval, #{qna_title}, #{qna_content}, '문의', li_qna_seq.currval, #{user_no})
+    </insert>
+
+    <!--문의게시판 글 수정 쿼리문-->
+    <update id="qnaBoardUpdate" parameterType="qnaBoard">
+        update li_qna
+        set qna_title = #{qna_title},
+        qna_content = #{qna_content},
+        qna_date_fix = sysdate
+        <if test="user_no != 0">
+            , user_no = #{user_no}
+        </if>
+        where qna_no = #{qna_no}
+    </update>
+    <!--문의게시판 답변 작성쿼리문 -->
+    <insert id="qnaAnswerInsert" parameterType="qnaBoard">
+
+        <!--원글의 step보다 더 큰 step을 가진 글이 있다면 그 글들의 step을 먼저 +1 해준다.-->
+
+            insert into li_qna(qna_no, qna_title, qna_content, qna_category, qna_group, qna_indent, qna_step, admin_no, user_no)
+            values(li_qna_seq.nextval, #{qna_title}, #{qna_content}, '답변', #{qna_group}, #{qna_indent} +1, #{qna_step} +1, #{admin_no}, #{user_no})
+    </insert>
+
+    <update id="qnaAnswerStepUpdate" parameterType="qnaBoard">
+        update li_qna set qna_step = qna_step + 1
+        where qna_group = #{qna_group} and qna_step > #{qna_step}
+    </update>
+    <!--문의게시판 글 삭제 쿼리문-->
+    <delete id="qnaBoardDelete" parameterType="qnaBoard">
+        delete from li_qna where qna_no = #{qna_no}
+    </delete>
+
+</mapper>

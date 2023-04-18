@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.admin.img.dao.AdminClassImgDAO">
+	<!-- 사진등록(개별 & 클래스) -->
+	<insert id="imgInsert" parameterType="img">
+		<selectKey keyProperty="c_img_no" resultType="int" order="BEFORE">
+			select li_class_img_seq.nextval from dual
+		</selectKey>
+		insert into li_class_img( c_img_no, c_no, c_img_file, thumb_file )
+		values ( #{c_img_no}, #{c_no}, #{c_img_file}, #{thumb_file} )
+	</insert>
+	
+	<!-- 사진삭제1 : 해당클래스의 모든 사진정보들을 삭제한다. -->
+	<delete id="imgDel" parameterType="int">
+		delete from li_class_img where c_no = #{c_no}
+	</delete>
+	
+	<!-- 사진삭제2 : 개별사진 정보를 삭제 -->
+	<delete id="imgDel2" parameterType="img">
+		delete from li_class_img where c_img_no = #{c_img_no}
+	</delete>
+	
+	<!-- 사진조회 : 해당클래스의 모든 사진정보(vo)들을 조회해온다.. -->
+	<select id="imgList" parameterType="int" resultType="img">
+		select c_img_no, c_img_file, thumb_file from li_class_img where c_no = #{c_no}
+		order by c_img_no asc
+	</select>
+	
+	<!-- 사진수정 : 개별사진의 사진정보를 수정한다..(클래스단위X, 개별사진단위O) -->
+	<update id="imgUpd" parameterType="img">
+		update li_class_img set c_img_file = #{c_img_file}, thumb_file = #{thumb_file}
+		where c_img_no = #{c_img_no}
+	</update>
+	
+	<!-- 클래스당 사진의 갯수구하기 -->
+	<select id="imgCnt" parameterType="int" resultType="int">
+		select count(*) from li_class_img where c_no = #{c_no}
+	</select>
+	
+</mapper>

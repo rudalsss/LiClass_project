@@ -1,0 +1,12 @@
+@charset "UTF-8";
+
+.container{display:flex;justify-content:center;align-items:center;}
+.bordercss{border:2px solid #A9A9A9;border-radius:15px;width:900px;}
+.table{margin:10px 0;} 
+.midTable{margin:30px 0;}
+th{width:320px;font-size:30px;}
+td{font-size:20px;}
+#succ{border:1px solid #6E6E6E;background-color:#6E6E6E;color:white;font-weight: bold;text-align:center;font-size:30px;}
+.orderInfo{display:flex;justify-content: center;align-items: center;}
+.payinfotable{padding:100px;width:80%;}
+.price{color:#58ACFA;font-size:20px;} 

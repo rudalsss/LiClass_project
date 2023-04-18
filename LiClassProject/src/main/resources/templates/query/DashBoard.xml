@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.admin.management.dashboard.dao.DashBoardDao">
+
+    <select id="noticeList" parameterType="qnaBoard" resultType="qnaBoard">
+    <![CDATA[
+        SELECT qna_no, qna_title, qna_content, qna_category, TO_CHAR(qna_date, 'YYYY-MM-DD') AS qna_date, admin_name
+        FROM (
+                 SELECT a.qna_no, a.qna_title, a.qna_content, a.qna_category, qna_date, b.admin_name,
+                        ROW_NUMBER() OVER (ORDER BY qna_date DESC) AS rnum
+                 FROM li_qna a JOIN li_admin b ON a.admin_no = b.admin_no
+                 WHERE a.qna_category = '공지'
+             )
+        WHERE rnum <= 5
+    ]]>
+    </select>
+    <select id="qnaList" parameterType="qnaBoard" resultType="qnaBoard">
+    <![CDATA[
+        SELECT qna_no, qna_title, qna_content, qna_category, TO_CHAR(qna_date, 'YYYY-MM-DD') AS qna_date, user_name
+        FROM (
+                 SELECT a.qna_no, a.qna_title, a.qna_content, a.qna_category, qna_date, b.user_name,
+                        ROW_NUMBER() OVER (ORDER BY qna_date DESC) AS rnum
+                 FROM li_qna a JOIN li_user b ON a.user_no = b.user_no
+                 WHERE a.qna_category = '문의'
+             )
+        WHERE rnum <= 5
+        ]]>
+    </select>
+
+    <select id="userState" parameterType="dashBoard" resultType="map">
+        select
+                (select count(*) from li_user where user_status = 0)activeUser,
+                (select count(*) from li_user where user_status = 1)inactiveUser
+        from dual
+    </select>
+
+    <select id="userReserve" parameterType="dashBoard" resultType="map">
+        select
+                (select count(*) from li_reserve)reserve,
+                (select count(*) from li_reserve where r_state = 2)reserveCheck,
+                (select count(*) from li_reserve where r_state = 3)reserveCancel
+        from dual
+    </select>
+
+    <select id="allSales" parameterType="dashBoard" resultType="map">
+        SELECT TO_CHAR(sum(NVL(pay_price, 0)), 'FM999,999,999,999') AS allSales FROM li_payment
+    </select>
+
+</mapper>

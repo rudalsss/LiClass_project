@@ -1,0 +1,90 @@
+@charset "UTF-8";
+.accordion-button{ /*열리지 않은 아코디언*/
+	background-color: #c8c8c8;
+	height: 30px;
+}
+.accordion-button.collapsed{ /*닫힌 아코디언*/
+	background-color:#d2d2d2	;
+	pointer-events : none;
+}
+.accordion-button:not(.collapsed) { /*열린 아코디언*/
+   background-color: #dcdcdc;
+   color: #000000	;
+   font-weigth: bold;
+   /*box-shadow: #FDF5DC;*/
+   pointer-events : none;
+}
+.accordion-button:focus {
+	border-color: #FDF5DC;
+    /*box-shadow: #FDF5DC;*/
+}
+.moveBtn{
+	margin-top: 20px;
+}
+.accordion-body{
+	/*background: #FDF5DC;*/
+	background: #FAEBD7;
+}
+.acbtnName{
+	font-color : #6e6e6e;
+	font-size : 13px;
+}
+.episodeBox{
+	color : #c8c8c8;
+	font-size : 12px;
+	border : 0.5px solid #bebebe;
+	border-radius: 3px;
+	padding: 8px;
+	background  : #FDF5E6;
+}
+.eprice{
+	color : #FF8200;
+	font-weight : bold;
+	font-size : 13.5px;
+}
+.episodeBox[data-value='예약만석'] {
+	pointer-events : none;
+}
+.episodeBox[data-value='예약만석'] *{
+	color : #d2d2d2;
+}
+#ep_template {
+	display: none;
+}
+.episodeBox:active, .episodeBox:hover, .episodeBox:focus {
+	border : 1px solid #EA813D;
+}
+.minBtn, .plusBtn{
+	font-size: 10px;
+	font-weight : bold;
+	background : #F5D08A	;
+	height: 30px;
+	border: #c8c8c8
+}
+input[name='sample_cnt']{
+	text-align: center;
+	width: 50px;
+	height: 28px;
+	font-size : 12px;
+	font-weight : bold;
+	background-color: #FAEBC3;
+	border: 0.3px solid #dcdcdc;
+	border-radius: 3px;
+}
+.payBtn{
+	background-color:#F0B469;
+	border-color:#c8c8c8;
+	font-color:#8c8c8c;
+	font-size: 15px;
+}
+.part1,.payBtn {
+	 font-color:#2a3246;
+	 font-size:13px;
+	 font-weight:bold;
+}
+.checkEp {
+	border: 2px solid #DB631F;
+}
+.accordion-item{
+	width: 238px;
+}

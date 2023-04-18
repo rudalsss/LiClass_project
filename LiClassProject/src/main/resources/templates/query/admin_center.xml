@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.admin.center.dao.CenterDAO">
+	<!-- 페이징처리되지 않은 list -->
+	<select id="centerlist2" parameterType="Center" resultType="Center">
+		select * from li_center
+	</select>
+	
+	<!-- 겹칠것같음 
+	<select id="centerDetail" parameterType="int" resultType="center">
+		select * from li_center where ct_bizno = #{int}
+	</select>
+	-->
+</mapper>

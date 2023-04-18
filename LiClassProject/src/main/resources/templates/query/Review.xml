@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.client.review.dao.ReviewDAO">
+   
+   <!-- 재활용을 위한 소스 -->
+	<sql id = "reviewSearch">
+		<if test="search=='review_title'">
+			<![CDATA[ review_title LIKE '%'|| #{keyword} ||'%' ]]>
+		</if>
+			
+		<if test="search=='review_content'">
+			<![CDATA[ review_content LIKE '%'|| #{keyword} ||'%' ]]>
+		</if>
+	
+	</sql>
+
+    <!-- 후기 게시판 리스트 조회(페이징 처리와 검색 처리) -->
+   <select id="reviewList" parameterType="review" resultType = "review" >
+      <![CDATA[
+         SELECT review_no, review_title, review_content, to_char(review_date, 'YYYY-MM-DD') as review_date, review_recommend, 
+         review_rating, user_no, user_name, c_no, user_img
+         FROM (
+            SELECT /*+ INDEX_DESC(Li_review Li_review_pk) */ 
+             rownum as rnum, lr.review_no, lr.review_title, lr.review_content, lr.review_date, lr.review_recommend, 
+             lr.review_rating, lu.user_no, lu.user_name, lr.c_no, lu.user_img
+             
+             FROM Li_review lr , Li_user lu 
+             where lr.user_no = lu.user_no and c_no = #{c_no} and review_status = 0 and
+      ]]>
+      <trim prefix="(" suffix=") AND " prefixOverrides="AND">
+         <include refid="reviewSearch"></include>
+      </trim>
+   <![CDATA[ rownum <= #{pageNum} * #{amount}
+            ) reviewList
+            WHERE rnum > (#{pageNum} - 1) * #{amount} 
+    ]]>
+    </select>
+    
+    <!-- 전체 레코드 수 조회 -->
+    <select id="reviewListCnt" parameterType="review" resultType="int">
+       SELECT count(*) FROM Li_review where c_no = #{c_no}
+       <trim prefix=" and(" suffix=")" >
+          <include refid="reviewSearch"></include>
+       </trim>
+    </select>
+    
+    
+   <!-- 게시물 등록 -->
+   <insert id ="reviewInsert" parameterType="review">
+      <selectKey keyProperty="review_no" resultType="int" order="BEFORE">
+         select Li_review_seq.nextval from dual
+      </selectKey>
+      INSERT INTO Li_review(review_no, review_title, review_content, review_date, review_status, 
+      review_rating, review_recommend, r_no, c_no, user_no)
+      VALUES(#{review_no}  , #{review_title}, #{review_content}, TO_CHAR(SYSDATE ,'YYYY-MM-DD'), 0, 
+      #{review_rating}, #{review_recommend} ,#{r_no}, #{c_no}, #{user_no})
+   </insert>
+   
+   <!-- 게시물 상세조회  -->
+   <select id = "reviewDetail" resultType="review" parameterType="review">
+      SELECT
+         review_no, review_title, review_content, Review_rating, review_recommend, r_no,
+         TO_CHAR(review_date, 'YYYY-MM-DD') AS review_date
+      FROM Li_review
+      WHERE r_no = #{r_no}
+   
+   </select>
+   
+   <!-- 게시글 수정조회 -->
+   <select id = "updateFormToRno" resultType="review" parameterType="review">
+      SELECT
+         review_no , review_title, review_content, Review_rating, review_recommend, r_no,
+         TO_CHAR(review_date, 'YYYY-MM-DD') AS review_date
+      FROM Li_review
+      WHERE r_no = #{r_no}
+   </select>
+   
+   
+   <!-- 게시글 수정    -->
+   <update id = "reviewUpdate" parameterType = "review">
+      UPDATE Li_review
+      SET review_title = #{review_title},
+         review_content = #{review_content},
+         review_update = TO_CHAR(SYSDATE ,'YYYY-MM-DD')
+      where r_no = #{r_no}
+   </update>
+
+
+   <!-- 게시글 삭제 -->
+   <delete id = "reviewDelete" parameterType="review">
+      DELETE FROM Li_review 
+      where review_no = #{review_no}
+   </delete>
+
+
+   <!-- 별점 통계 (평균 구하기)-->
+   <select id="getRatingAverage" resultType="double">
+      select avg(review_rating)
+      from Li_review
+      where c_no = #{c_no}
+   </select>
+   
+   
+   <!-- 별점 통계(각자의 개수) -->
+   <select id="tongRating" parameterType="review" resultType="map">
+      select
+          (select count(*) from li_review where review_rating = 1 and c_no = #{c_no}) rating1,
+          (select count(*) from li_review where review_rating = 2 and c_no = #{c_no}) rating2,
+          (select count(*) from li_review where review_rating = 3 and c_no = #{c_no}) rating3,
+          (select count(*) from li_review where review_rating = 4 and c_no = #{c_no}) rating4,
+          (select count(*) from li_review where review_rating = 5 and c_no = #{c_no}) rating5
+      from dual
+   </select>
+   
+   
+   <update id="changeReviewStatus" parameterType="int">
+      update li_reserve set REVIEW_STATUS = 1 
+      where R_NO = #{r_no}
+   </update>
+   
+   <update id="changeReviewStatus2" parameterType="int">
+      update li_reserve set REVIEW_STATUS = 0 
+      where R_NO = #{r_no}
+   </update>
+   
+   <select id = "reviewImg" parameterType="int" resultType="String">
+      select lci.thumb_file
+      from li_reserve lr inner join li_episode le on lr.ep_no = le.ep_no
+                         inner join li_class lc on le.c_no = lc.c_no
+                         right join li_class_img lci on lc.c_no = lci.c_no
+                         where lr.r_no = #{r_no} and rownum = 1
+   </select>
+   
+   <!-- 경민) 클래스 기준 리뷰 리스트 조회-->
+   <select id="reviewOfclass" parameterType="int" resultType="review">
+   		select * from li_review where c_no = #{c_no}
+   </select> 
+    
+</mapper>

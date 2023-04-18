@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.admin.management.clientmanagement.dao.ClientManagementDao">
+
+	<!-- 검색 기능 -->
+	<sql id="clientSearch">
+		<if test="search == 'user_name'">
+			<![CDATA[ user_name LIKE '%' || #{keyword} || '%' ]]>
+		</if>
+	</sql>
+	
+	<!-- 게시판 리스트 조회(페이징 처리와 검색 처리) 및 댓글 갯수 구하기
+	힌트(hint): 개발자가 데이터베이스에 어떤 방식으로 실행해 줘야 하는지를 명시하기 때문에 강제성을 부여한다. 
+		 구문: /*+ 로 시작하고 */ 로 종료된다. /*+ INDEX_DESC(테이블명 인덱스명[기본기 설정시 제약조건명으로 인덱스 자동 생성]) */
+	ROWNUM: SQL이 실행된 결과에 넘버링해준다.
+	게시판 리스트 조회(페이징 처리와 검색 처리) -->
+	<select id="clientList" parameterType="User" resultType="User">
+		<![CDATA[
+		SELECT
+			user_no, user_email, user_pw, user_name, user_tel, user_img, user_point, user_regdate, user_update, to_char(user_unregdate,'YYYY-MM-DD') user_unregdate,
+			user_status, user_type
+		FROM(
+				SELECT /*+ INDEX_DESC(li_user li_user_pk) */
+					ROWNUM AS rnum, user_no, user_email, user_pw, user_name, user_tel, user_img, user_point, user_regdate, user_update, user_unregdate,
+					user_status, user_type
+				FROM li_user
+				WHERE]]>
+				<trim prefix="(" suffix=") AND " prefixOverrides="AND">
+					<include refid="clientSearch"></include>
+				</trim>
+			<![CDATA[ROWNUM <= #{pageNum} * #{amount}
+			)li_user
+		WHERE rnum > (#{pageNum} - 1) * #{amount}
+		]]>
+	</select>
+	
+	<select id="clientListCnt" resultType="int">
+		select count(*) from li_user
+	</select>
+
+	<update id="outClient" parameterType="long">
+		update li_user set USER_STATUS = 1
+		where user_no = #{user_no}
+	</update>
+
+	<delete id="deleteDB" parameterType="long">
+		delete li_user
+		where user_no = #{user_no}
+	</delete>
+	
+</mapper>

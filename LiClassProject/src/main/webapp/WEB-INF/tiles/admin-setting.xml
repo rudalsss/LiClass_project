@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+    <definition name="admin-tiles" template="/WEB-INF/views/template/admin/adminLayout.jsp">
+        <put-attribute name="title" value="관리자 페이지"/>
+        <put-attribute name="side" value="/WEB-INF/views/template/admin/side.jsp"/>
+        <put-attribute name="header" value="/WEB-INF/views/template/admin/header.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/views/template/admin/footer.jsp"/>
+    </definition>
+    
+    <definition name="admin/management/*" extends="admin-tiles">
+        <put-attribute name="title" value="관리자"/>
+        <put-attribute name="main" value="/WEB-INF/views/admin/management/{1}.jsp"/>
+    </definition>
+    
+    <definition name="admin/management/clientManagement/*" extends="admin-tiles">
+        <put-attribute name="title" value="회원관리"/>
+        <put-attribute name="main" value="/WEB-INF/views/admin/management/clientManagement/{1}.jsp"/>
+    </definition>
+    
+    <definition name="admin/class/*" extends="admin-tiles">
+        <put-attribute name="title" value="클래스관리"/>
+        <put-attribute name="main" value="/WEB-INF/views/class/{1}.jsp"/>
+    </definition>
+    
+    <definition name="admin/episode/*" extends="admin-tiles">
+        <put-attribute name="title" value="회차등록화면"/>
+        <put-attribute name="main" value="/WEB-INF/views/episode/{1}.jsp"/>
+    </definition>
+
+    <definition name="admin/management/noticeboard/*" extends="admin-tiles">
+        <put-attribute name="title" value="공지사항 관리"/>
+        <put-attribute name="main" value="/WEB-INF/views/admin/management/noticeboard/{1}.jsp"/>
+    </definition>
+
+    <definition name="admin/management/qnaboard/*" extends="admin-tiles">
+        <put-attribute name="title" value="문의게시판 관리"/>
+        <put-attribute name="main" value="/WEB-INF/views/admin/management/qnaboard/{1}.jsp"/>
+    </definition>
+
+    <definition name="admin/statistics/*" extends="admin-tiles">
+        <put-attribute name="title" value="통계 관리"/>
+        <put-attribute name="main" value="/WEB-INF/views/admin/statistics/{1}.jsp"/>
+    </definition>
+
+    <definition name="admin/management/center/*" extends="admin-tiles">
+        <put-attribute name="title" value="센터 관리"/>
+        <put-attribute name="main" value="/WEB-INF/views/admin/management/center/{1}.jsp"/>
+    </definition>
+
+    <definition name="admin/management/studio/*" extends="admin-tiles">
+        <put-attribute name="title" value="스튜디오 관리"/>
+        <put-attribute name="main" value="/WEB-INF/views/admin/management/studio/{1}.jsp"/>
+    </definition>
+
+    <definition name="error/*" extends="admin-tiles">
+        <put-attribute name="title" value="에러페이지" />
+        <put-attribute name="body" value="/WEB-INF/views/error/{1}.jsp" />
+    </definition>
+</tiles-definitions>

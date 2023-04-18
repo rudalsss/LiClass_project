@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.client.login.dao.UserDAO">
+	<!-- 은아,웅배 -->
+	<!--1. 회원 가입   -->
+	<insert id="signup" parameterType="User">
+		insert into li_user(user_no,user_email,user_pw,user_name,user_tel,user_type)
+		values( 
+		user_no_func(sysdate),#{user_email}, #{user_pw}, #{user_name}, #{user_tel},0)
+	</insert>
+	
+	<!-- 2. 이메일 중복 확인-->
+	<select id="checkEmail" parameterType="String" resultType="int" >
+		SELECT nvl((select count(*) 
+		from li_user where user_email = #{user_email} and user_status = 0 ), 0) as result 
+		from dual
+	</select>
+	
+	<!-- 3. 비밀번호 찾기할 때 기존가입자인지 확인 (2.이메일 중복 확인과 따로 쓰는 이유는 user_type='0' (email회원) 조건을 추가해야하므로) --> 
+	<select id="findEmail" parameterType="String" resultType="int" >
+		SELECT nvl((select count(*) 
+		from li_user where user_email = #{user_email} and user_status = 0  and user_type = 0), 0) as result 
+		from dual
+	</select>
+	
+	<!-- 4. 비밀번호 찾기(임시비밀번호로 update)  -->
+	<update id="updatePw" parameterType="User" >
+		update li_user
+		set user_pw = #{user_pw}
+		where user_email = #{user_email}
+	</update>
+	
+	<!-- 5. 아이디 비밀번호 확인 -->
+	<select id="checkIdPw" parameterType="User" resultType="int" ><!--  and user_status = 0  -->
+		SELECT nvl((select count(*) 
+		from li_user where user_email = #{user_email} and user_pw = #{user_pw}), 0) as result 
+		from dual
+	</select>
+	
+	
+	<!-- 5. 비밀번호 수정 이후 경과일 계산 -->
+	<select id="checkPwExp" parameterType="User" resultType="int" >
+		SELECT trunc(sysdate-user_update ) + 1
+		FROM li_user
+		WHERE user_email = #{user_email}
+	</select>
+	
+	<!--6. 로그인처리  -->
+	<select id="login" parameterType="User" resultType="User" >
+		select user_no,user_email,user_pw,user_name,user_tel,user_img,user_point,
+				to_char(user_regdate,'YYYY-MM-DD') as user_regdate,to_char(user_update,'YYYY-MM-DD') as user_update,
+				user_status,user_type
+		from li_user
+		where user_email = #{user_email} and user_pw = #{user_pw} 
+	</select>
+	
+	<!-- 7. SNS 계정 신규연동시 user테이블에 등록-->
+	<insert id="SNSInsert"  parameterType="User">
+	    insert into li_user (user_no, user_email, user_pw, user_name, user_img, user_type) 
+	    values (
+	    user_no_func(sysdate),#{user_email}, #{user_pw}, #{user_name}, #{user_img},#{user_type})
+	</insert>
+	
+	<!-- 8. SNS 계정 기존연동 (입력한 이메일이 user테이블에 있는지 확인, sns회원은 이메일만 입력하므로 위에 id=login 이랑 약간 다르다.)-->
+	<select id="SNSLogin" parameterType="String" resultType="User" >
+		select user_no,user_email,user_pw,user_name,user_name,user_tel,user_point,
+				user_img,to_char(user_regdate,'YYYY-MM-DD') as user_regdate,user_status,user_type
+		from li_user
+		where user_email = #{user_email}
+	</select>
+	
+	<!-- 9. 비밀번호 확인 -->
+	<select id="checkPw" parameterType="User" resultType="int" >
+		select nvl((select count(*) 
+		from li_user where user_email = #{user_email} and user_pw= #{user_pw} ),0) as result 
+		from dual
+	</select>
+	
+	<!-- 10. 회원정보 수정  -->
+	<update id="update">
+		update li_user
+		set user_pw= #{user_pw},user_tel=#{user_tel},user_name=#{user_name},user_update=sysdate
+		where user_email = #{user_email}
+	</update>
+	
+	<!-- 11. 회원 탈퇴 -->
+	<update id="unregister">
+		update li_user 
+		set user_status = '1', user_unregdate = sysdate
+		where user_email = #{user_email}
+	</update>
+	
+	<!-- 회원리스트
+	<select id="userList" resultType="User" >
+		select num,id,pw,name,phone,email,address,regdate,status from user_table
+		order by num asc  
+	</select> -->
+	
+	<!-- 회원정보 상세조회 -->
+	<select id="userDetail" parameterType="User" resultType="User" >
+		select user_no,user_pw,user_name,user_tel,user_email,user_point,
+				to_char(user_birth,'YYYY/MM/DD') as user_birth,user_address,user_img,to_char(user_regdate,'YYYY-MM-DD') as user_regdate,
+				to_char(user_unregdate,'YYYY-MM-DD') as user_unregdate,user_status
+		from li_user 
+		where user_no = #{user_no} 
+	</select>
+
+	
+</mapper>

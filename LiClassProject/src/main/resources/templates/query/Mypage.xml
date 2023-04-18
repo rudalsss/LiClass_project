@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.client.mypage.dao.MypageDAO">
+	<!-- 은아,웅배 -->
+	<!--1. 나의 관심클래스 조회 -->
+	<select id="myLikesList" parameterType="User" resultType="c_class">
+      SELECT A.like_regdate, A.like_no like_no, A.user_no user_no, A.c_no c_no,B.c_img_file c_img_file ,C.c_title c_title,C.c_area c_area
+			FROM li_likes A left outer join
+	    		(select c_no, 
+	        	MAX(DECODE(RID, 1, c_img_file)) c_img_file
+	    		from (
+            		SELECT c_no, c_img_file,
+                	ROW_NUMBER() OVER (PARTITION BY c_no ORDER BY c_img_no) RID, 
+                	c_img_no
+                	
+            		FROM li_class_img
+	        	) 
+	    		GROUP BY c_no
+	   			) B
+				on A.c_no = B.c_no 
+                right outer join
+                (select c_no, c_title,c_area
+	    		from (
+            		SELECT c_no, c_title,c_area
+                
+            		FROM li_class)
+	        	) C
+	    		on A.c_no = C.c_no 
+                where a.user_no = #{user_no}
+                order by like_regdate desc
+	</select>
+	
+	<!--2. 나의 관심클래스 갯수   -->
+	<select id="myLikesCnt" parameterType="Likes" resultType="int">
+		select count(*) from li_likes
+		where user_no = #{user_no}
+	</select>
+	
+	<!--3. 나의 후기 조회 -->
+	<select id="myReviewList" parameterType="Review" resultType="Review">
+		select review_no,review_name,review_title,review_content,review_rating,class_img,
+		            to_char(review_date,'YYYY-MM-DD') as review_date,review_update,
+		            review_status,c_no,user_no,user_img,c_title
+		                    from
+		                    
+                        (select         a.review_no review_no,
+                                        b.user_name review_name,
+                                        a.review_title review_title,
+                                        a.review_content review_content, 
+                                        review_rating,
+                                        (select MAX(DECODE(RID, 1, c_img_file)) c_img_file
+                                        from (
+                                            SELECT rownum rnum, c_no, c_img_file,
+                                            ROW_NUMBER() OVER (PARTITION BY c_no ORDER BY c_img_no) RID, 
+                                            c_img_no
+                                            
+                                            FROM li_class_img
+                                            where c_no = a.c_no ) GROUP BY c_no) as class_img,
+                                        a.review_date review_date,
+                                        a.review_update review_update,
+                                        a.review_status review_status,
+                                        a.c_no c_no,
+                                        a.user_no user_no,
+                                        b.user_img user_img,
+                                        c.c_title c_title from li_review a left join li_user b on a.user_no = b.user_no
+                                        left join li_class c on a.c_no = c.c_no
+                        where b.user_no = #{user_no}
+                        order by review_date desc)
+            
+	</select>
+	
+	<!--4. 나의 후기 갯수 -->
+	<select id="myReviewCnt" parameterType="Review" resultType="int">
+        select count(*) from li_review
+		where user_no = #{user_no}
+	</select>
+	
+	<!--5-1. 나의 문의 조회 -->
+	<select id="myQnaList" parameterType="ClientQnaBoard" resultType="ClientQnaBoard">
+        	select 
+                  USER_NO, qna_no, qna_title, qna_content,
+				  qna_group,(select count(*) from li_qna where QNA_GROUP = myqna.qna_group and user_no =  #{user_no} ) as qna_status,  
+	              to_char(qna_date,'YYYY-MM-DD') as qna_date, to_char(qna_date_fix,'YYYY-MM-DD') as qna_date_fix
+	        from (
+                  select 
+                      USER_NO, qna_no, qna_title, qna_content,
+				      qna_group, qna_date, qna_date_fix
+                  from li_qna 
+                  where user_no =  #{user_no} and admin_no is null
+                  order by qna_date desc
+               )myqna
+    
+	</select>
+	
+	<!--5-2. 나의 문의의 답변 조회 -->
+	<select id="myQnaAnswer" parameterType="ClientQnaBoard" resultType="ClientQnaBoard">
+        	select 
+                  USER_NO, qna_no, qna_title, qna_content,
+				  qna_group,(select count(*) from li_qna where QNA_GROUP = myqna.qna_group and user_no =  #{user_no} ) as qna_status,  
+	              to_char(qna_date,'YYYY-MM-DD') as qna_date, to_char(qna_date_fix,'YYYY-MM-DD') as qna_date_fix
+	        from (
+                  select 
+                      USER_NO, qna_no, qna_title, qna_content,
+				      qna_group, qna_date, qna_date_fix
+                  from li_qna 
+                  where admin_no = 1 and qna_group = #{qna_group}
+                  order by qna_date desc
+               )myqna
+    
+	</select>
+	
+	<!--6. 나의 문의 갯수 -->
+	<select id="myQnaCnt" parameterType="User" resultType="int">
+        select count(*) from li_qna
+		where user_no = #{user_no} and admin_no is null
+	</select>
+	
+			
+	<!--7. 나의 클래스일지 조회 -->
+	<select id="myPostList" parameterType="User" resultType="Post">
+		select post_no,user_no,post_title,post_content,post_likes,post_img,post_status,
+		to_char(post_regdate, 'YYYY-MM-DD') as post_regdate,
+		to_char(post_update, 'YYYY-MM-DD') as post_update 
+		from li_post
+		where user_no = #{user_no}
+		order by post_regdate desc
+	</select>
+		
+			
+	<!--8. 나의 클래스일지 갯수  -->
+	<select id="myPostCnt" parameterType="User" resultType="int">
+		select count(*) from li_post
+		where user_no = #{user_no}
+	</select>
+		
+	
+	<!--7. 프로필 사진 수정  -->
+	<update id="updateImg" parameterType="User" >
+		update li_user
+		set user_img = #{user_img}
+		where user_no = #{user_no}
+	</update>
+	
+	
+	<!-- 웅배파트 --> 
+   <!-- 결제내역 불러오기 -->
+   <resultMap type="java.util.HashMap" id="payList">
+      <id column="merchant_uid" property="merchant_uid" />
+      <id column="r_no" property="r_no" />
+      <id column="user_no" property="user_no" />
+      <id column="pay_pg" property="pay_pg" />
+      <id column="pay_method" property="pay_method" />
+      <id column="pay_name" property="pay_name" />
+      <id column="pay_price" property="pay_price" />
+      <id column="pay_buyer_name" property="pay_buyer_name" />
+      <id column="pay_buyer_tel" property="pay_buyer_tel" />
+      <id column="pay_buyer_email" property="pay_buyer_email" />
+      <id column="pay_date" property="pay_date" />
+      <id column="pay_status" property="pay_status" />
+      <id column="count" property="count" />
+      <id column="pay_point" property="pay_point"/>
+   </resultMap>
+   
+   <select id="paymentList" parameterType="payment" resultMap="payList">
+         <![CDATA[
+            select merchant_uid, r_no, user_no, pay_pg, pay_method, pay_name, pay_price
+               , pay_buyer_name, pay_buyer_tel, pay_buyer_email, TO_CHAR(pay_date, 'YYYY-MM-DD HH24:MI:SS') AS pay_date, pay_status
+               ,(select trunc(sysdate - (select pay_date from li_payment where merchant_uid = li.merchant_uid)) from dual) count
+               , pay_point
+             from(
+                select 
+                   rownum as rnum, merchant_uid, r_no, user_no, pay_pg, pay_method, pay_name, pay_price
+                    , pay_buyer_name, pay_buyer_tel, pay_buyer_email, pay_date, pay_status,pay_point
+                from (
+                    select 
+                        rownum as rnum, merchant_uid, r_no, user_no, pay_pg, pay_method, pay_name, pay_price
+                        , pay_buyer_name, pay_buyer_tel, pay_buyer_email, pay_date, pay_status,pay_point
+                    from li_payment li
+                    order by pay_date desc
+                    )
+                where
+
+              ]]>
+               <![CDATA[
+                  ROWNUM <= #{pageNum} * #{amount} and user_no = #{user_no} 
+            )li
+            where rnum > (#{pageNum} - 1) * #{amount}
+            ]]>
+   </select>
+   
+   <!-- 전체 레코드 수 조회 -->
+   <select id="paymentListCnt" parameterType="payment" resultType="int">
+      select count(*) from li_payment
+      where user_no = #{user_no}
+   </select>
+   
+   <!-- 수강내역 컬럼 -->
+  <!-- 수강내역 컬럼 -->
+   <resultMap type="java.util.HashMap" id="courseResult" >
+      <id column="c_title" property="title" />
+      <id column="c_category" property="category" />
+      <id column="c_level" property="level" />
+      <id column="c_area" property="area" />
+      <id column="ep_date" property="date" />
+      <id column="r_no" property="r_no" />
+      <id column="count" property="count" />
+      <id column="c_no" property="c_no" />
+      <id column="user_no" property="user_no" />
+      <id column="review_status" property="review_status" />
+      <id column="ct_addr" property="ct_addr" />
+      <id column="ct_detail_addr" property="ct_detail_addr" />
+   </resultMap>
+   
+   <!-- 수강내역 -->
+   <select id="courseList" parameterType="payment" resultMap="courseResult">
+      select lc.c_title c_title, lc.c_no c_no, lp.user_no user_no, lr.REVIEW_STATUS review_status, lc.c_category c_category, lc.c_level c_level, lc.c_area c_area, to_char(le.ep_date,'YYYY-MM-DD HH24:MI:SS') ep_date,
+             lr.r_no r_no, to_char((select trunc((select ep_date from li_episode where ep_no = le.ep_no) - sysdate) from dual)) as count,
+             DBMS_LOB.SUBSTR(lt.ct_addr,4000,1) ct_addr, DBMS_LOB.SUBSTR(lt.ct_detail_addr,4000,1) ct_detail_addr
+     from li_center lt inner join li_class lc   on lt.ct_bizno = lc.ct_bizno
+                        inner join li_episode le on lc.c_no = le.c_no 
+                        inner join li_reserve lr on le.ep_no = lr.ep_no
+                        inner join li_payment lp on lr.r_no = lp.r_no
+     where lp.user_no = #{user_no} and lp.pay_status = 0
+     order by ep_date asc
+   </select>
+   
+   <resultMap type="java.util.HashMap" id="imgdate" >
+      <id column="thumb_file" property="thumb_file" />
+      <id column="r_date" property="r_date" />
+   </resultMap>
+   
+	<select id="getClassImg" parameterType="int" resultMap="imgdate">
+		select thumb_file, to_char((select trunc((select to_date(r_date) from li_reserve where r_no = lr.r_no) - sysdate) from dual)) as r_date
+		from ( SELECT *  
+			   FROM li_class_img
+			   ORDER BY ROWNUM asc), li_reserve lr
+		where c_no = (select lc.c_no
+       					 from li_class lc inner join li_episode le on lc.c_no = le.c_no 
+                        				  inner join li_reserve lr on le.ep_no = lr.ep_no
+                        				  inner join li_payment lp on lr.r_no = lp.r_no
+                         where lp.r_no = #{r_no}) and rownum = 1 and lr.r_no = #{r_no}
+	</select>
+   
+</mapper>

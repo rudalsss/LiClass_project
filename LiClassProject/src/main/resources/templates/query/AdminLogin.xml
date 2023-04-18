@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.admin.login.dao.AdminLoginDao">
+    <select id="loginProcess" parameterType="adminLogin" resultType="adminLogin">
+        select admin_id, admin_name, admin_email, admin_no, admin_pw
+        from li_admin
+        where admin_id = #{admin_id} and admin_pw = #{admin_pw}
+    </select>
+
+    <update id="changeAdminPwd" parameterType="adminLogin">
+        update li_admin set admin_pw = #{admin_pw} where admin_no = #{admin_no}
+    </update>
+
+</mapper>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.admin.episode.dao.EpisodeDAO">
+	<!-- =====================관리자 화면에서 사용할 쿼리문============================ -->
+	<!-- 클래스에 대한 회차를 모두 조회 -->
+	<select id="epList" parameterType="int" resultType="episode">
+		select a.ep_no, a.c_no, a.ep_price, a.ep_cnt,
+		to_char(a.ep_date,'yy/mm/dd hh24:mi') as ep_date ,
+		DECODE( a.ep_cnt, b.c_maxcnt, '인원만석', '인원여유'  ) AS ep_state1,
+		CASE WHEN <![CDATA[a.ep_date > sysdate]]> THEN '모집중'
+					WHEN <![CDATA[a.ep_date = sysdate]]> THEN '진행중'
+				   ELSE '진행종료' 
+		END AS ep_state2
+		FROM li_episode a JOIN li_class b
+		ON a.c_no = b.c_no
+		where a.c_no = #{number} and a.ep_state = 0
+	</select>
+	
+	<!-- 회차등록 -->
+	<insert id="epInsert" parameterType="episode">
+		<selectKey keyProperty="ep_no" resultType="int" order="BEFORE">
+			select li_episode_seq.nextval from dual
+		</selectKey>
+		insert into li_episode(ep_no, c_no, ep_price, ep_date, c_title)
+		values( #{ep_no}, #{c_no}, #{ep_price}, to_date(#{ep_date}, 'yy/mm/dd hh24:mi'), #{c_title} )
+	</insert>
+	
+	<!-- 동일한 클래스에서 같은 시간대의 회차는 생성할 수 없도록 확인 -->
+	<!-- 같은 클래스에서 중복 시간값이 있으면1, 없으면 0을 반환한다. -->
+	<select id="chkDate" resultType="int" parameterType="episode">
+		select nvl(( 
+			select 1 from li_episode where c_no = #{c_no} 
+			and ep_date = to_date(#{ep_date}, 'yy/mm/dd hh24:mi'
+			and ep_state = 0 )), 0 ) 
+		as state 
+		from dual
+	</select>
+	
+	<!-- 회차삭제
+	<delete id="epDelete" parameterType="int">
+		delete from li_episode where ep_no = #{number}
+	</delete> -->
+	<!-- 회차삭제2 -->
+	<update id="epDel" parameterType="int">
+		update li_episode set ep_state = 1 
+		where ep_no = #{ep_no}
+	</update>
+	
+	<!-- 해당 클래스의 회차 수 구하기 -->
+	<select id="epCnt" parameterType="int" resultType="int">
+		select count(ep_no) from li_episode where c_no = #{c_no} and ep_state = 0
+	</select>
+	
+	<!-- =====================예약화면에서 사용할 쿼리문============================ -->
+	
+	<!-- 해당 클래스에 회차가 존재하는 날짜들을 불러온다 -->
+	<!-- 오늘날짜 이후의 것들만 가져온다. (이전의 자료들은 필요없음) -->
+	<select id="epDateList" parameterType="int" resultType="String">
+		select to_char(ep_date,'yy/mm/dd') as ep_date from li_episode 
+		where c_no = #{c_no} 
+		and ep_date >= sysdate
+		and ep_state = 0
+	</select>
+	
+	<!-- 해당클래스에서 같은날짜, 다른시간대를 가진 모든 회차들에 대한 모든정보(클래스의 최대인원까지)를 가져온다..-->
+	<!-- 출력안내용 -->
+	<resultMap type="episode" id="epDetail">
+		<result column="C_MAXCNT" property="c_maxcnt" jdbcType="NUMERIC" javaType="java.lang.Integer"/>
+		<result column="C_LEADTIME" property="c_leadtime" jdbcType="NUMERIC" javaType="java.lang.Integer" />
+	</resultMap>
+	<select id="epInfo" parameterType="episode" resultMap="epDetail">
+		SELECT 
+		a.ep_no, a.c_no, a.c_title, a.ep_price, a.ep_cnt,b.c_maxcnt, 
+		to_char( a.ep_date, 'yyyy"년 "mm"월 "dd"일("dy") "am hh12":"mi' ) AS ep_date ,
+		to_char( a.ep_date + b.c_leadtime/24 , ' yyyy"년 "mm"월 "dd"일("dy") "am hh12":"mi ' ) AS c_endtime
+		FROM li_episode a JOIN li_class b ON a.c_no = b.c_no
+		WHERE to_char(a.ep_date,'yy/mm/dd') = #{ep_date}
+		AND a.c_no = #{c_no}
+		AND a.ep_state = 0
+	</select>
+	
+	<!-- 해당회차에 대한 상세정보를 가져온다. -->
+	<!-- 예약정보 등록용 -->
+	<select id="reservInfo" parameterType="int" resultType="episode">
+		select c_title, ep_price, to_char(ep_date,'yy/mm/dd hh24:mi') as ep_date from li_episode
+		where ep_no = #{ep_no}
+	</select>
+	
+	<!-- 예약완료후 회차의 인원수가 증가한다. -->
+	<update id="EpcntUpdate" parameterType="reserve">
+		update li_episode set ep_cnt = ep_cnt + #{r_cnt}
+		where ep_no = #{ep_no}
+	</update>
+	
+	<!-- 환불후 회차의 인원수가 환불한 만큼 감소한다. -->
+	<update id="EpcntDel" parameterType="reserve">
+		update li_episode set ep_cnt = ep_cnt - #{r_cnt} 
+		where ep_no = #{ep_no}
+	</update>
+	
+</mapper>

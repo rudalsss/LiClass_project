@@ -1,0 +1,54 @@
+@charset "UTF-8";
+/*은아*/
+	/* .container{
+		margin:0px;
+	}
+	 */
+	#user_pw{
+		background-color: #e2e2e252;
+		margin: 0px 15px;
+	}
+	.right-text{
+		padding-top: 380px;
+		display: inline-flex;
+		font-size: 16px;
+	}
+	.delete-likes{
+		display: block;
+   		text-align: right;
+   		margin-top :10px;
+	}
+	.edit-review{
+		display: block;
+   		text-align: right;
+   		margin-top :10px;
+	}
+/* profile img*/
+.filebox .upload-display {  
+  margin-bottom: 5px;
+}
+
+@media(min-width: 768px) { 
+  .filebox .upload-display {
+    display: inline-block;
+    margin-right: 5px;
+    margin-bottom: 0;
+  }
+}
+
+.filebox .upload-thumb-wrap { 
+  display: inline-block;
+  width: 54px;
+  padding: 2px;
+  vertical-align: middle;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.filebox .upload-display img {  
+  display: block;
+  max-width: 100%;
+  width: 100% \9;
+  height: auto;
+}

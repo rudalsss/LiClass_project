@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.admin.statistics.dao.StatisticsDao">
+    <select id="userStatistics" parameterType="User" resultType="map">
+        SELECT
+            COUNT(*) AS allusers,
+            COUNT(CASE WHEN user_status = 0 THEN 1 END) AS activeuser,
+            COUNT(CASE WHEN user_status = 1 THEN 1 END) AS inactiveuser,
+            COUNT(CASE WHEN user_type = 0 THEN 1 END) AS emailuser,
+            COUNT(CASE WHEN user_type = 1 THEN 1 END) AS kakaouser,
+            COUNT(CASE WHEN user_type = 2 THEN 1 END) AS naveruser
+        FROM li_user
+    </select>
+
+    <select id="quarterStatistics" parameterType="Payment" resultType="HashMap">
+        SELECT
+            quarters.quarter,
+            COALESCE(SUM(pay_price), 0) AS sales
+        FROM
+            (
+                SELECT '1분기' AS quarter FROM DUAL
+                UNION ALL SELECT '2분기' AS quarter FROM DUAL
+                UNION ALL SELECT '3분기' AS quarter FROM DUAL
+                UNION ALL SELECT '4분기' AS quarter FROM DUAL
+            ) quarters
+                LEFT JOIN li_payment
+                          ON TO_CHAR(pay_date, 'YYYY') = '2023' AND
+                             quarters.quarter = CASE
+                                                    WHEN TO_CHAR(pay_date, 'Q') = '1' THEN '1분기'
+                                                    WHEN TO_CHAR(pay_date, 'Q') = '2' THEN '2분기'
+                                                    WHEN TO_CHAR(pay_date, 'Q') = '3' THEN '3분기'
+                                                    ELSE '4분기'
+                                 END
+        GROUP BY
+            quarters.quarter
+        ORDER BY
+            CASE quarters.quarter
+                WHEN '1분기' THEN 1
+                WHEN '2분기' THEN 2
+                WHEN '3분기' THEN 3
+                ELSE 4
+                END
+    </select>
+
+    <select id="allSales" parameterType="Payment" resultType="Hashmap">
+        SELECT '전체 매출' as sales_type, SUM(NVL(pay_price, 0)) AS sales_acount
+        FROM li_payment
+        WHERE pay_status = 0
+        UNION ALL
+        SELECT '환불 매출' as sales_type, SUM(NVL(pay_price, 0)) AS sales_acount
+        FROM li_payment
+        WHERE pay_status = 3
+    </select>
+
+    <select id="levelStatistics" parameterType="Payment" resultType="HashMap">
+        SELECT
+            c_level,
+            NVL(SUM(pay_price), 0) AS sales_sum
+        FROM
+            li_class
+                LEFT OUTER JOIN li_episode ON li_class.c_no = li_episode.c_no
+                LEFT OUTER JOIN li_reserve ON li_episode.ep_no = li_reserve.ep_no
+                LEFT OUTER JOIN li_payment ON li_reserve.r_no = li_payment.r_no
+        GROUP BY
+            c_level,
+            CASE
+                WHEN c_level = '상' THEN 1
+                WHEN c_level = '중' THEN 2
+                WHEN c_level = '하' THEN 3
+                END
+    </select>
+
+    <select id="reserveStatistics" parameterType="Reserve" resultType="map">
+        SELECT
+            COUNT(*) AS allReserve,
+            COUNT(CASE WHEN r_state = 2 THEN 1 END) AS reserveComp,
+            COUNT(CASE WHEN r_state = 3 THEN 1 END) AS reserveCancel
+
+        FROM li_reserve
+    </select>
+
+    <select id="salesCount" parameterType="Payment" resultType="map">
+        SELECT
+            COUNT(*) AS allpayment,
+            COUNT(CASE WHEN pay_status = 0 THEN 1 END) AS paymentConf,
+            COUNT(CASE WHEN pay_status = 3 THEN 1 END) AS paymentCancel,
+            COUNT(CASE WHEN TO_CHAR(pay_date, 'Q') = '1' THEN 1 END) AS q1,
+            COUNT(CASE WHEN TO_CHAR(pay_date, 'Q') = '2' THEN 1 END) AS q2,
+            COUNT(CASE WHEN TO_CHAR(pay_date, 'Q') = '3' THEN 1 END) AS q3,
+            COUNT(CASE WHEN TO_CHAR(pay_date, 'Q') = '4' THEN 1 END) AS q4
+        FROM li_payment
+        WHERE pay_status IN (0, 3)
+    </select>
+
+    <select id="levelCount" parameterType="Payment" resultType="HashMap">
+        SELECT
+            COALESCE(li_class.c_level, '상') AS c_level,
+            COUNT(li_payment.r_no) AS payment_count
+        FROM
+            li_class
+                LEFT JOIN li_episode ON li_class.c_no = li_episode.c_no
+                LEFT JOIN li_reserve ON li_episode.ep_no = li_reserve.ep_no
+                LEFT JOIN li_payment ON li_reserve.r_no = li_payment.r_no
+        GROUP BY
+            c_level,
+            CASE
+                WHEN c_level = '상' THEN 1
+                WHEN c_level = '중' THEN 2
+                WHEN c_level = '하' THEN 3
+                END
+
+    </select>
+
+
+</mapper>

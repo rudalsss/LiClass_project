@@ -1,0 +1,109 @@
+@charset "UTF-8";
+/* 모달 디테일 css */
+
+.bv-required-fields-text.custom-cursor-default-hover { width : 550px;  border-bottom: 1px solid #e5e5e5; float: right;}
+
+
+/*************************************************   
+r_WriteForm reviewContent 
+**************************************************/
+#contentTextarea {
+    width: 80%;
+    height: 8.25em;
+    resize: none;
+  	}
+  	
+.contentContainer{
+	margin-bottom : 120px;
+}
+  	
+/*************************************************  
+* r_WriteForm 별점 css 
+**************************************************/
+
+.rating {
+	direction: rtl;
+	unicode-bidi: bidi-override;
+	color: #ddd; /* Personal choice */
+}
+.rating input {
+	display: none;
+}
+
+.rating label:hover,
+.rating label:hover ~ label,
+.rating input:checked + label,
+.rating input:checked + label ~ label {
+	color: #555; /* Personal color choice. Lifted from Bootstrap 4 */
+}
+
+/*************************************************  
+r_WriteForm Yes/No
+**************************************************/
+
+.toggleBtn{ margin: -5px 7px 0 0;}
+
+
+.btn {
+   border: 3px solid #333;
+   display: inline-block;
+   padding: 10px;
+   position: relative;
+   text-align: center;
+   transition: background 600ms ease, color 600ms ease;
+}
+
+input[type="radio"].toggle {
+   display: none;
+}
+
+input[type="radio"].toggle + label {
+   cursor: pointer;
+   min-width: 60px;
+   background-color: white;
+   color: #333;
+   border: 2px #333 solid;
+}
+
+input[type="radio"].toggle + label:hover {
+   background-color: #333;
+   color : white;
+}
+
+input[type="radio"].toggle + label:after {
+   color: black;
+   content: "";
+   height: 100%;
+   position: absolute;
+   top: 0;
+   transition: left 200ms cubic-bezier(0.77, 0, 0.175, 1);
+   width: 100%;
+   z-index: -1;
+}
+
+input[type="radio"].toggle.toggle-left + label {
+   border-right: 1;
+}
+
+input[type="radio"].toggle.toggle-left + label:after {
+   left: 100%;
+}
+
+input[type="radio"].toggle.toggle-right + label {
+   margin-left: -5px;
+}
+
+input[type="radio"].toggle.toggle-right + label:after {
+   left: -100%;
+}
+
+input[type="radio"].toggle:checked + label {
+   cursor: default;
+   color: white;
+   background-color : #333;
+   transition: color 200ms;
+}
+
+input[type="radio"].toggle:checked + label:after {
+   left: 0;
+}

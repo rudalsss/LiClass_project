@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.client.payment.dao.PaymentDao">
+
+   <!--  웅배 파트  -->
+   <select id="getUserInfo" parameterType="long" resultType="User">
+      select * from li_user
+      where user_no = #{user_no}
+   </select>
+
+   <select id="getReserveInfo" parameterType="int" resultType="reserve">
+      select * from li_reserve
+      where r_no = #{r_no}
+   </select>   
+   
+   <select id="getCenterInfo" parameterType="int" resultType="center">
+   	select lcc.CT_NAME,lcc.CT_TEl,lcc.CT_ADDR,lcc.CT_DETAIL_ADDR,lcc.CT_HMPG_ADDR
+	from li_center lcc inner join li_class lc on lcc.CT_BIZNO = lc.CT_BIZNO
+	                   inner join li_episode le on lc.c_no = le.c_no
+	                   inner join li_reserve lr on le.ep_no = lr.ep_no
+	                   inner join li_payment lp on lr.r_no = lp.r_no
+	where lr.r_no = #{r_no}
+   </select>
+   
+   <!-- 포인트적립 -->
+   <update id="getPoint" parameterType="long">
+   	update li_user set user_point = user_point+#{point} where user_no = #{user_no}
+   </update>
+   
+   <!-- 포인트 사용(결제) -->
+   <update id="changePoint" parameterType="payment">
+   	update li_user set user_point = user_point-#{pay_point}
+	where user_no = #{user_no}
+   </update>
+   
+   <update id="changePoint2" parameterType="payment">
+   	update li_user set user_point = user_point+#{pay_point}
+	where user_no = #{user_no}
+   </update>
+   
+   <!-- 결제 테이블 저장(insert) -->
+   <insert id="inserPayment" parameterType="payment">
+      insert into li_payment(merchant_uid, r_no, user_no, pay_pg, pay_method, pay_name
+      , pay_price, pay_buyer_name, pay_buyer_tel, pay_buyer_email, pay_status, pay_point)
+      values(#{merchant_uid}, #{r_no}, #{user_no}, #{pay_pg}, #{pay_method}, #{pay_name}, #{pay_price},
+      #{pay_buyer_name}, #{pay_buyer_tel}, #{pay_buyer_email}, #{pay_status}, #{pay_point})
+   </insert>
+   <!-- 이메일로 회원아이디 가져오기 -->
+   <select id="getUserId" parameterType="java.lang.String" resultType="User">
+      select user_no from li_user
+      where user_email = #{user_email}
+   </select>
+   <!-- 예약상태변경 -->
+   <update id="changeRerserveStatus" parameterType="int">
+      update li_reserve set r_state = #{r_state}
+      where r_no = #{r_no}
+   </update>
+   
+   
+   <!-- 환불하기 -->
+   <insert id="insertRefund" parameterType="refund">
+      <selectKey keyProperty="refund_no" resultType="int" order="BEFORE">
+         SELECT floor(DBMS_RANDOM.VALUE(1,100000000)) RANDOM FROM DUAL
+      </selectKey>
+   
+      insert into li_refund(refund_no, merchant_uid, user_no, refund_price, refund_method, refund_status)
+      values(#{refund_no}, #{merchant_uid}, #{user_no}, #{refund_price}, #{refund_method}, #{refund_status})
+   </insert>
+   
+   <!-- 결제된 금액, 결제방법 가져오기 -->
+   <select id="getPaymentInfo" parameterType="java.lang.String" resultType="payment">
+      select * from li_payment
+      where merchant_uid = #{merchant_uid} 
+   </select>
+   
+   <!-- 결제상태 환불로 바꿔주기 -->
+   <update id="changePaymentStatus" parameterType="java.lang.String">
+      update li_payment set pay_status = 3
+      where merchant_uid = #{merchant_uid}
+   </update>
+
+   <!-- 결제도중 취소시 예약테이블에 데이터 삭제 -->
+   <delete id="reserveDelete" parameterType="int">
+      delete from li_reserve
+      where r_no = #{r_no}
+   </delete>
+   
+   <!-- 경민) 회차삭제로 인한 결제데이터 가져오는거 -->
+   <select id="getWithdrawPay" parameterType="int" resultType="payment">
+		 select * from li_payment where r_no = #{r_no}
+   </select>
+	
+   <!-- 경민)결제 상태바꾸기 -->
+   <update id="updWithdrawPay" parameterType="payment">
+   		update li_payment set pay_status = 3
+      	where merchant_uid = #{merchant_uid}
+   </update>
+
+
+</mapper>

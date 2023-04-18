@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.client.reserve.dao.ReserveDAO">
+	
+	<!-- 예약등록하기 -->
+	<insert id="reservInsert" parameterType="reserve">
+		insert into li_reserve( r_no, user_no, ep_no, c_title, r_price, r_cnt, r_date ) 
+		values( #{r_no}, #{user_no}, #{ep_no}, #{c_title}, #{r_price}, #{r_cnt}, to_date(#{r_date}, 'yy/mm/dd hh24:mi') )
+	</insert>
+	
+	<!-- 한건의 예약정보를 불러온다. -->
+	<select id="reservSelect" parameterType="int" resultType="reserve">
+		select * from li_reserve where r_no = #{r_no}
+	</select>
+	
+	<!-- 회차단위의 예약정보들을 불러온다.(회차날짜가 경과되지 않은 것에 한함) -->
+	<select id="reservListSelect" parameterType="int" resultType="reserve">
+		select * from li_reserve 
+		where ep_no = #{ep_no}
+		and <![CDATA[r_date > sysdate]]>
+	</select>
+	
+	<!-- 예약정보의 상태값을 변화시킨다. -->
+	<update id="reservWithdraw" parameterType="int">
+		update li_reserve set r_state = 4
+		where r_no = #{r_no}
+	</update>
+	
+</mapper>

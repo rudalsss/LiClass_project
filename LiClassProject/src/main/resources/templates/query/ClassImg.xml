@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.client.classes.dao.ClientClassImgDAO">
+	
+	<!--은아) 클래스 전체이미지-->
+	<select id="getImgs" resultType="ClassImg" parameterType="int">
+		select c_img_no, c_img_file, thumb_file from li_class_img 
+		where c_no = #{c_no}
+	</select>
+	
+</mapper>

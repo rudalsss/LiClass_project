@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.client.classes.dao.ClientClassDAO">
+	
+	<!--은아) 클래스 상세조회 -->
+	<select id="clientClassDetail" parameterType="c_class" resultType="c_class">
+			SELECT A.c_no, A.c_title, A.c_content,A.c_leadtime,A.c_maxcnt,A.c_mincnt,A.c_category,A.c_level , A.c_area ,A.ct_bizno , 
+			(select count(*) from li_likes where c_no = A.c_no) c_luv, A.c_state, to_char(A.c_date, 'YYYY-MM-DD') as c_date, B.c_img_file 
+			FROM li_class A left outer join
+	    		(select c_no, 
+	        	MAX(DECODE(RID, 1, c_img_file)) c_img_file
+	    		from (
+            		SELECT c_no, c_img_file,
+                	ROW_NUMBER() OVER (PARTITION BY c_no ORDER BY c_img_no) RID, 
+                	c_img_no
+                	
+            		FROM li_class_img
+	        	) 
+	    		GROUP BY c_no
+	   			) B
+				on A.c_no = B.c_no 
+				where A.c_no = #{c_no}
+				ORDER BY c_no asc
+	</select>
+	
+	<!--은아) 클래스 센터 상세조회-->
+	<select id="clientCenterDetail" resultType="center" parameterType="String">
+		select ct_bizno,ct_name,ct_opbiz_ym,ct_intro,ct_mainart,ct_zipno,ct_addr,
+				ct_detail_addr,ct_tel,ct_hmpg_addr
+        from li_center 
+        where ct_bizno= #{ct_bizno}
+	</select> 
+	
+	<!-- 지민 -->
+	
+	<!-- 클래스 리스트 기본 조회 (클래스 번호, 클래스 명, 클래스 내용, 클래스 카테고리, 클래스 지역, 클래스 하트, 클래스 상태, 클래스 사진) 
+	<select id="classList" resultType="c_class">
+		SELECT c_no, c_title, c_content, c_category, c_area, c_luv, c_state
+		FROM li_class
+		ORDER BY c_no desc
+	</select>
+	-->
+	
+	<!-- 리뷰개수, 클래스 등록날짜 조회 
+	<select id="classList" resultType="c_class">
+		SELECT c_no, c_title, c_content, c_category, c_area, c_luv, c_state, to_char(c_date, 'YYYY-MM-DD') as c_date,
+		FROM li_class
+		ORDER BY c_no desc
+	</select>
+	-->
+	
+	<resultMap type="c_class" id="c_class">
+		<result column="c_img_file" property="c_img_file" jdbcType="VARCHAR" javaType="java.lang.String"/>
+	 </resultMap>
+	<select id="clientClassList" resultMap="c_class">
+		SELECT A.c_no, A.c_title, A.c_content, A.c_category , A.c_area , A.c_luv, A.c_state, to_char(A.c_date, 'YYYY-MM-DD') as c_date, B.c_img_file 
+			FROM li_class A left outer join
+	    		(select c_no, 
+	        	MAX(DECODE(RID, 1, c_img_file)) c_img_file
+	    		from (
+            		SELECT c_no, c_img_file,
+                	ROW_NUMBER() OVER (PARTITION BY c_no ORDER BY c_img_no) RID, 
+                	c_img_no
+                	
+            		FROM li_class_img
+	        	) 
+	    		GROUP BY c_no
+	   			) B
+				on A.c_no = B.c_no 
+				ORDER BY c_no asc
+	</select>
+	
+	
+	
+</mapper>

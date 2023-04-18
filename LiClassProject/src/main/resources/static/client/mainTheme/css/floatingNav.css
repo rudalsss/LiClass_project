@@ -1,0 +1,113 @@
+@charset "UTF-8";
+.btn-component {
+  position: fixed;
+  top: 140px;
+  right: -225px;
+  z-index: 9999;
+  -webkit-transition: .4s;
+  transition: .4s;
+  padding: 8px 12px;
+  border-radius: 3px 0 0 3px;
+  font-weight: 100;
+}
+
+.btn-component.affix {
+  right: -115px;
+}
+
+.btn-component i {
+  position: relative;
+  display: inline-block;
+  margin-right: 20px;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.btn-component:hover {
+  right: 0;
+}
+
+.btn-component:hover i {
+  -webkit-transform: translateX(10px);
+      -ms-transform: translateX(10px);
+          transform: translateX(10px);
+  margin-right: -20px;
+  opacity: 0;
+}
+
+#floatMenu {
+	position: absolute;
+	width: 200px;
+	height: 200px;
+	left: 85%;
+	top: 30%;
+	color: #fff;
+	z-index: 5;
+}
+
+/* ------------------
+	Navigation 
+------------------ */
+.side-menu {
+	position: fixed;
+	right: 30px;
+	top: 40%;
+    transform: translateY(-73px);
+    z-index: 99;
+}
+.side-menu ul li {
+    text-align: right;
+    margin: 10px 0;
+}
+.side-menu ul li a span {
+	display: inline-block;
+}
+.side-menu ul li a span.menu-title {
+	color: #fff;
+    position: relative;
+    margin-right: 10px;
+    text-transform: uppercase;
+    font-size: 12px;
+    background-color: #686160ab;
+    padding: 3px 10px;
+    font-weight: 600;
+    border-radius: 3px;
+    -webkit-transition: -webkit-transform 0.2s, opacity 0.2s;
+    -moz-transition: -moz-transform 0.2s, opacity 0.2s;
+    transition: transform 0.2s, opacity 0.2s;
+    -webkit-transform-origin: 100% 50%;
+    -moz-transform-origin: 100% 50%;
+    -ms-transform-origin: 100% 50%;
+    -o-transform-origin: 100% 50%;
+    transform-origin: 100% 50%;
+    opacity: 0;
+}
+.side-menu ul li a:hover span.menu-title {
+    opacity: 1;
+}
+.side-menu ul li a span.dot {
+    position: relative;
+    background-color: #676261c2;
+    border-radius: 2em;
+    height: 10px;
+    width: 10px;
+    -webkit-transition: all 0.3s;
+  	-moz-transition: all 0.3s;
+  	transition: all 0.3s;
+}
+.side-menu ul li a:hover span.dot {
+	transform: scale(1.8);
+}
+.recent-img{
+	width:100px;
+	height: 100px;
+}
+
+#recent span{
+	color:#5555559e;
+}
+
+#recent-del{
+	margin:5px;
+	color:#5555559e;
+}

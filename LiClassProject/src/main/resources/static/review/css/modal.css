@@ -1,0 +1,194 @@
+.modal {
+	        position: absolute;
+	        top: 0;
+	        left: 0;
+			display: block;
+	        width: 100%;
+	        height: 100%;
+	       background-color: rgba(0, 0, 0, 0.4);
+	      }
+	     
+
+.blocktitle{
+	display: block;
+    float: left;
+    width: 550px;
+    text-align: left;
+    padding: 0 0 10px 5px ; 
+    }
+
+.blockcontent{
+	
+	float: left;
+    margin: 0 0 10px 5px;
+    font-size: 10px;
+    }
+
+fieldset , legend{
+   width: 550px;
+   float: right;
+   margin-bottom:0px;
+}
+	
+
+.modal_content{
+  top: 55%;
+  width: 600px;
+  padding-right: 20px;
+  height: 540px;
+  background:#fff; border-radius:5px;
+  text-align:center;
+  box-sizing:border-box;
+  
+ /* 모달 위치 조정 */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+     transform: translate(-50%, -50%);
+}
+
+/* 모달 내용 div */
+.modal_main{
+	width: 550px;
+    float: right;
+    height: 100%;
+    }
+
+.bv-subject-info-section{ 
+	width: 220px;
+    height: 468px; 
+	background-color: #333; color:white;} 
+
+#modal_close, #updatemodal_close, #detailmodal_close{
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+   -webkit-font-smoothing: antialiased;
+   text-size-adjust: 100%;
+   --swiper-theme-color: #007aff;
+   --swiper-navigation-size: 44px;
+   font: inherit;
+   background-attachment: scroll!important;
+   background-image: none!important;
+   background-position: 0 0!important;
+   background-repeat: repeat!important;
+   bottom: auto!important;
+   clear: none!important;
+   clip: auto!important;
+   counter-increment: none!important;
+   counter-reset: none!important;
+   direction: inherit!important;
+   display: inline!important;
+   float: none!important;
+   font-style: inherit!important;
+   font-variant: normal!important;
+   font-weight: inherit!important;
+   height: auto!important;
+   left: auto!important;
+   letter-spacing: normal!important;
+   list-style-type: inherit!important;
+   list-style-position: outside!important;
+   list-style-image: none!important;
+   max-height: none!important;
+   max-width: none!important;
+   min-height: 0!important;
+   min-width: 0!important;
+   opacity: 1!important;
+   overflow: visible!important;
+   quotes: '' ''!important;
+   table-layout: auto!important;
+   text-indent: 0!important;
+   text-transform: none!important;
+   unicode-bidi: normal!important;
+   visibility: inherit!important;
+   width: auto!important;
+   word-spacing: normal!important;
+   filter: none!important;
+   box-sizing: border-box!important;
+   text-align: center!important;
+   white-space: nowrap!important;
+   vertical-align: baseline!important;
+   cursor: pointer!important;
+   background-color: transparent!important;
+   margin: 0!important;
+   padding: 0!important;
+   border: 0!important;
+   position: absolute!important;
+   top: 0!important;
+   right: 3px!important;
+   font-family: 'BVCustom'!important;
+   font-size: 28px!important;
+   line-height: 28px!important;
+   z-index: 2000007040!important;
+   color: #767676!important;
+   text-decoration: none!important;
+   }
+   
+   
+   .bv-mbox-sidebar{
+   	    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+   -webkit-font-smoothing: antialiased;
+   text-size-adjust: 100%;
+   --swiper-theme-color: #007aff;
+   --swiper-navigation-size: 44px;
+   text-rendering: optimizespeed;
+   background-attachment: scroll!important;
+   background-color: transparent!important;
+   background-image: none!important;
+   background-position: 0 0!important;
+   background-repeat: repeat!important;
+   border-color: currentColor!important;
+   border-style: none!important;
+   border-width: medium!important;
+   bottom: auto!important;
+   box-sizing: content-box!important;
+   clear: none!important;
+   clip: auto!important;
+   color: inherit!important;
+   counter-increment: none!important;
+   counter-reset: none!important;
+   cursor: auto!important;
+   direction: inherit!important;
+   font-family: inherit!important;
+   font-size: inherit!important;
+   font-style: inherit!important;
+   font-variant: normal!important;
+   font-weight: inherit!important;
+   height: auto!important;
+   left: auto!important;
+   letter-spacing: normal!important;
+   line-height: inherit!important;
+   list-style-type: inherit!important;
+   list-style-position: outside!important;
+   list-style-image: none!important;
+   margin: 0!important;
+   max-height: none!important;
+   max-width: none!important;
+   min-height: 0!important;
+   min-width: 0!important;
+   opacity: 1!important;
+   overflow: visible!important;
+   padding: 0!important;
+   position: static!important;
+   quotes: '' ''!important;
+   right: auto!important;
+   table-layout: auto!important;
+   text-align: inherit!important;
+   text-decoration: inherit!important;
+   text-indent: 0!important;
+   text-transform: none!important;
+   top: auto!important;
+   unicode-bidi: normal!important;
+   visibility: inherit!important;
+   white-space: normal!important;
+   word-spacing: normal!important;
+   z-index: auto!important;
+   filter: none!important;
+   float: left!important;
+   width: 25%!important;
+   display: block!important;
+   
+}

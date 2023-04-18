@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.client.likes.dao.LikesDAO">
+	<!-- 은아 -->
+	<!--1. 관심클래스 유무 체크   -->
+	<select id="checkLikes" parameterType="Likes" resultType="int" >
+		SELECT nvl((select count(*) 
+		from li_likes where user_no = #{user_no} and c_no = #{c_no}), 0) as result 
+		from dual
+	</select>
+	
+	<!--2. 관심클래스 중복 제어 추가 -->
+	<insert id="addLikes" parameterType="Likes">
+		insert into li_likes(like_no,user_no,c_no)
+		select li_likes_seq.NEXTVAL,#{user_no},#{c_no} from dual
+        where not exists 
+        (select like_no from li_likes where user_no = #{user_no} AND c_no =#{c_no})
+	</insert>
+	
+	<!--3. 관심클래스 삭제   -->
+	<delete id="delLikes" parameterType="Likes">
+		delete from li_likes
+		where user_no = #{user_no} and c_no = #{c_no}
+	</delete>
+	
+	<!-- 경민 -->
+	<!-- 클래스에 해당하는 likes개체 리스트 조회 -->
+	<select id="likesOfClass" parameterType="int" resultType="Likes" >
+		select * from li_likes where c_no = #{c_no}
+	</select>
+</mapper>

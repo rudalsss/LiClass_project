@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liclass.admin.classes.dao.AdminClassDAO">
+	
+	<!-- 전체 리스트 조회 -->
+	<select id="classList" resultType="Adminclass" parameterType="Adminclass">
+		<![CDATA[
+		select c_no, ct_bizno,  c_title, c_content, c_category, c_level, c_area, c_luv, c_maxcnt, c_mincnt, c_date
+		from (
+			select /*+ index_desc(li_class li_class_pk)*/ 
+			rownum as rnum, c_no, ct_bizno,  c_title, c_content, c_category, c_level, c_area, c_luv, c_maxcnt, c_mincnt, c_date
+			from li_class
+			where ]]>
+			<trim prefix="(" suffix=") and " prefixOverrides="and">
+				<include refid="classSearch"></include>
+			</trim>
+			<![CDATA[
+					rownum <= #{pageNum} * #{amount}
+				) classlist
+				where rnum > ( #{pageNum}-1 ) * #{amount}
+		]]>
+	</select>	
+	
+	<sql id="classSearch">
+		<if test="search=='c_title'">
+			c_title like '%'||#{keyword}||'%'
+		</if>
+		<if test="search=='c_area'">
+			c_area like '%'||#{keyword}||'%'
+		</if>
+		<if test="search=='c_category'">
+			c_category like '%'||#{keyword}||'%'
+		</if>
+	</sql>
+	
+	<!-- 전체 레코드 수 조회 -->
+	<select id="classListCnt" parameterType="Adminclass" resultType="int">
+		select count(*) from li_class
+		<trim prefix="where (" suffix=")" >
+				<include refid="classSearch"></include>
+			</trim>
+	</select>
+	
+	<!-- 하나레코드 상세조회 -->
+	<select id="classDetail" parameterType="int" resultType="Adminclass">
+		select * from li_class where c_no = #{num}
+	</select> 
+	
+	<!-- 레코드 입력 -->
+	<insert id="classInsert" parameterType="Adminclass">
+		<selectKey keyProperty="c_no" resultType="int" order="BEFORE">
+			select li_class_seq.nextval from dual
+		</selectKey>
+		insert into li_class(c_no, ct_bizno, c_title, c_content, c_category, c_level, c_area, c_leadtime, c_maxcnt )
+		values( #{c_no}, #{ct_bizno}, #{c_title}, #{c_content}, #{c_category}, #{c_level}, #{c_area}, #{c_leadtime}, #{c_maxcnt} )
+	</insert>
+	
+	<!-- 클래스 수정 -->
+	<update id="classUpdate" parameterType="Adminclass">
+		update li_class set 
+			c_area=#{c_area}, c_maxcnt=#{c_maxcnt}, c_leadtime=#{c_leadtime}, c_content=#{c_content}, c_level = #{c_level}
+		<if test="c_category !='' "> <!-- VO필드에서 c_category의 기본값을 ""로 설정해 두었다... -->
+			, c_category = #{c_category}
+		</if>
+		where c_no = #{c_no}
+	</update>
+	
+	<!-- 클래스 삭제 -->
+	<delete id="classDelete" parameterType="int">
+		delete from li_class where c_no = #{c_no}
+	</delete>
+	
+	<!-- 클래스 테이블 & 센터 테이블 조인 을 통한 상세조회 -->
+	<!-- resultType이 map일 때,  map의 key는 컬럼명을 대문자로 할당되고, map의 value는 반환되는 row의 key에 해당하는 컬럼의 값이 할당된다. -->
+	<!-- map.get("C_NO") -->
+	<resultMap type="java.util.HashMap" id="classDetail">
+		<result column="C_CONTENT" property="C_CONTENT" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result column="CT_ADDR" property="CT_ADDR" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result column="CT_DETAIL_ADDR" property="CT_DETAIL_ADDR" jdbcType="CLOB" javaType="java.lang.String"/>
+	</resultMap>
+	
+	<select id="classDetail2" parameterType="int" resultMap="classDetail">
+		SELECT a.c_no, a.ct_bizno,  a.c_title, a.c_content, a.c_category, a.c_level, a.c_leadtime, a.c_area, a.c_luv, a.c_maxcnt, 
+		 			   b.ct_name, b.ct_addr, b.ct_detail_addr
+		from LI_CLASS a JOIN LI_CENTER b
+		ON a.ct_bizno = b.ct_bizno
+		where a.c_no = #{number}
+	</select>
+	
+</mapper>
