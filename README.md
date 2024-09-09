@@ -60,54 +60,57 @@ Like(좋아하다) + Class(클래스 취미활동)
 
 #### ☑️ 마이페이지 기능 ( 김은아 )
 
-회원가입한 사용자들이 자신의 관심사와 활동을 지속적으로 관리할 수 있도록 하는 기능들을 제공합니다.
+일반사용자는 라이클래스 플랫폼에 카카오계정, 네이버계정 등을 통해 가입할 수 있다. <br>
+회원가입한 사용자들에게 자신의 관심사와 지난 수강활동들을 지속적으로 관리할 수 있도록 하는 기능들을 제공한다.
+
 <img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/2ab1f396-86c0-4f4c-98e4-e4fc59c75f95">
 <img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/caaf3da5-f824-4052-8d14-ed8b8c5e7409">
+<img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/74a702e3-b5b9-40f3-9e6c-3d15d7b1fa7e">
 
-#### ☑️ 클래스 조회 및 예약( 이경민 )
+#### ☑️ 클래스 예약 및 등록 ( 이경민 )
 
-관심사별, 주제별, 지역별, 강사별 기준에 따라 이용가능한 클래스를 조회할 수 있고 이용가능한 날짜에 클래스를 예약하고 결제할 수 있다.
+일반사용자는 이용가능한 클래스를 조회할 수 있고 날짜, 시간에 따른 클래스 하위의 회차단위로 인원수, 가격에 따라 예약을 진행할 수 있다. <br>
+관리자는 이용가능한 클래스와 하위단위인 회차를 등록할 수 있다. 자신의 클래스를 홍보할 수 있는 사진, 동영상 등의 멀티미디어 컨텐츠를 게시할 수 있다.
 
 <img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/97f3bffb-2ab2-4d79-b4b5-7f19c7cdc031">
 <img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/5e2d3ca5-3552-4641-8cfd-c76baa49b64e">
 <img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/7bd4a179-109a-4199-bf1d-67c30a9a8245">
-<br>
+<img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/368dea9e-204e-4348-b551-7ad3794ab122">
 <img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/2744c25f-cb53-4b81-afd7-02c57828448e">
 <img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/1f53a4ef-a0c1-4ce7-bbe2-33083dcb551c">
 
-#### ☑️ 클래스 예약결제( 전웅배 )
+#### ☑️ 클래스 예약내역 결제( 전웅배 )
 
-적립포인트나 다양한 온라인 방식을 이용하여 결제까지 진행할 수 있다.
+일반사용자는 예약한 내역의 금액을 결제할 수 있다. 이때 적립포인트나 쿠폰등을 활용할 수 있으며 환불규정에 따라 결제취소도 가능하다.
 
 <img height="200" width="400" width="400" alt="image" src="https://github.com/user-attachments/assets/007ad928-63a6-41b3-93b9-983155b8fc36">
 <img height="200" width="400" width="400" alt="image" src="https://github.com/user-attachments/assets/581e8886-256b-4f58-8a08-35aa4916df37">
+<img height="200" width="400" width="400" alt="image" src="https://github.com/user-attachments/assets/f748df65-35fc-4d6a-976e-c061179318d7">
 
 
-#### ☑️ 사용자 - 클래스 체험 후기작성, 홍보글 작성, Q&A 작성 ( 임지민, 정소영 )
+#### ☑️ 클래스 이용후기작성, 홍보글 작성, Q&A 작성 ( 임지민, 정소영 )
 
-클래스를 예약수강하는 메인기능 이외에도 이용후기를 작성하고 특정 클래스 홍보글을 작성하거나 Q&A를 작성하는 부가적인 편의기능을 적절하게 구현하였다.
+일반사용자는 클래스 수강을 예약하는 메인기능 이외에도 이용후기를 작성하고 Q&A로 문의사항을 남길 수 있다.<br>
+관리자는 자신의 활동, 클래스 공간, 클래스 작품등을 홍보할 수 있다.
 
 <img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/b1ff0092-8c31-4127-8ba4-de3742ef1dbe">
 <img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/e2b7d73a-19b4-449e-8280-02532b07313b">
 
 
-#### ☑️ 관리자 - 회원관리 및 통계, 매출통계, 예약통계 ( 문민섭 )
+#### ☑️ 회원관리 및 통계, 매출통계, 예약통계 ( 문민섭 )
 
-클래스를 운영하는 관리자의 입장에서 예약현황 및 결제로 만들어진 매출현황을 편리하게 보고 분석할 수 있도록 통계서비스를 제공하고 회원관리 서비스도 제공한다.
+관리자는 플랫폼 회원들의 활동, 상태등을 관리할 수 있다. 접속 트래픽과 유입경로등을 확인할 수 있다. <br>
+클래스를 운영자는 예약현황을 확인하고 결제로 이어진 매출현황에 대한 통계정보를 열람할 수 있다.
 
 <img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/49a292f8-2ec4-40e6-96e7-a8b19a601399">
 <img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/496a10d6-523f-4fed-9d96-e2ed7f47fe78">
+<img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/2345e22d-6eac-42b6-a07b-4e189b1f27aa">
+<img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/dab9a47c-2950-43e6-9969-05f9668ed402">
 
-
-#### ☑️ 관리자 - 클래스 등록, 게시판 등록 및 관리
-
-관리자가 기본적으로 모든 게시판을 등록하고 수정하고 삭제하며 관리하도록 한다.
 
 #### ☑️ 사용자 사이트맵 & 관리자 사이트맵
-<div>
-  <img height="300" width="600" src="https://github.com/user-attachments/assets/afc6cf1e-8eaf-46a0-97ac-544cf6ce427a">
-  <img height="300" width="600" src="https://github.com/user-attachments/assets/42afb25d-200e-4311-bb52-0efc6e4b6914">
-</div>
+<img height="300" width="600" src="https://github.com/user-attachments/assets/afc6cf1e-8eaf-46a0-97ac-544cf6ce427a">
+<img height="300" width="600" src="https://github.com/user-attachments/assets/42afb25d-200e-4311-bb52-0efc6e4b6914">
 <br><br><br>
 
 ## 📍시연 영상
