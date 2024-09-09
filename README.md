@@ -61,42 +61,42 @@ Like(좋아하다) + Class(클래스 취미활동)
 #### ☑️ 마이페이지 기능 ( 김은아 )
 
 회원가입한 사용자들이 자신의 관심사와 활동을 지속적으로 관리할 수 있도록 하는 기능들을 제공합니다.
-<img height="200" width="300" alt="image" src="https://github.com/user-attachments/assets/2ab1f396-86c0-4f4c-98e4-e4fc59c75f95">
-<img height="200" width="300" alt="image" src="https://github.com/user-attachments/assets/caaf3da5-f824-4052-8d14-ed8b8c5e7409">
+<img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/2ab1f396-86c0-4f4c-98e4-e4fc59c75f95">
+<img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/caaf3da5-f824-4052-8d14-ed8b8c5e7409">
 
 #### ☑️ 클래스 조회 및 예약( 이경민 )
 
 관심사별, 주제별, 지역별, 강사별 기준에 따라 이용가능한 클래스를 조회할 수 있고 이용가능한 날짜에 클래스를 예약하고 결제할 수 있다.
 
-<img height="200" width="300" alt="image" src="https://github.com/user-attachments/assets/97f3bffb-2ab2-4d79-b4b5-7f19c7cdc031">
-<img height="200" width="300" alt="image" src="https://github.com/user-attachments/assets/5e2d3ca5-3552-4641-8cfd-c76baa49b64e">
-<img height="200" width="300" width="400" alt="image" src="https://github.com/user-attachments/assets/7bd4a179-109a-4199-bf1d-67c30a9a8245">
+<img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/97f3bffb-2ab2-4d79-b4b5-7f19c7cdc031">
+<img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/5e2d3ca5-3552-4641-8cfd-c76baa49b64e">
+<img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/7bd4a179-109a-4199-bf1d-67c30a9a8245">
 <br>
-<img height="200" width="300" width="400" alt="image" src="https://github.com/user-attachments/assets/2744c25f-cb53-4b81-afd7-02c57828448e">
-<img height="200" width="300" width="400" alt="image" src="https://github.com/user-attachments/assets/1f53a4ef-a0c1-4ce7-bbe2-33083dcb551c">
+<img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/2744c25f-cb53-4b81-afd7-02c57828448e">
+<img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/1f53a4ef-a0c1-4ce7-bbe2-33083dcb551c">
 
 #### ☑️ 클래스 예약결제( 전웅배 )
 
 적립포인트나 다양한 온라인 방식을 이용하여 결제까지 진행할 수 있다.
 
-<img height="200" width="300" width="400" alt="image" src="https://github.com/user-attachments/assets/007ad928-63a6-41b3-93b9-983155b8fc36">
-<img height="200" width="300" width="400" alt="image" src="https://github.com/user-attachments/assets/581e8886-256b-4f58-8a08-35aa4916df37">
+<img height="200" width="400" width="400" alt="image" src="https://github.com/user-attachments/assets/007ad928-63a6-41b3-93b9-983155b8fc36">
+<img height="200" width="400" width="400" alt="image" src="https://github.com/user-attachments/assets/581e8886-256b-4f58-8a08-35aa4916df37">
 
 
 #### ☑️ 사용자 - 클래스 체험 후기작성, 홍보글 작성, Q&A 작성 ( 임지민, 정소영 )
 
 클래스를 예약수강하는 메인기능 이외에도 이용후기를 작성하고 특정 클래스 홍보글을 작성하거나 Q&A를 작성하는 부가적인 편의기능을 적절하게 구현하였다.
 
-<img height="200" width="300" alt="image" src="https://github.com/user-attachments/assets/b1ff0092-8c31-4127-8ba4-de3742ef1dbe">
-<img height="200" width="300" alt="image" src="https://github.com/user-attachments/assets/e2b7d73a-19b4-449e-8280-02532b07313b">
+<img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/b1ff0092-8c31-4127-8ba4-de3742ef1dbe">
+<img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/e2b7d73a-19b4-449e-8280-02532b07313b">
 
 
 #### ☑️ 관리자 - 회원관리 및 통계, 매출통계, 예약통계 ( 문민섭 )
 
 클래스를 운영하는 관리자의 입장에서 예약현황 및 결제로 만들어진 매출현황을 편리하게 보고 분석할 수 있도록 통계서비스를 제공하고 회원관리 서비스도 제공한다.
 
-<img height="200" width="300" alt="image" src="https://github.com/user-attachments/assets/49a292f8-2ec4-40e6-96e7-a8b19a601399">
-<img height="200" width="300" alt="image" src="https://github.com/user-attachments/assets/496a10d6-523f-4fed-9d96-e2ed7f47fe78">
+<img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/49a292f8-2ec4-40e6-96e7-a8b19a601399">
+<img height="200" width="400" alt="image" src="https://github.com/user-attachments/assets/496a10d6-523f-4fed-9d96-e2ed7f47fe78">
 
 
 #### ☑️ 관리자 - 클래스 등록, 게시판 등록 및 관리
