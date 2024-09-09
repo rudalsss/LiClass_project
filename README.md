@@ -74,6 +74,9 @@ Like(좋아하다) + Class(클래스 취미활동)
 <img height="200" width="300" alt="image" src="https://github.com/user-attachments/assets/97f3bffb-2ab2-4d79-b4b5-7f19c7cdc031">
 <img height="200" width="300" alt="image" src="https://github.com/user-attachments/assets/5e2d3ca5-3552-4641-8cfd-c76baa49b64e">
 <img height="200" width="300" width="400" alt="image" src="https://github.com/user-attachments/assets/7bd4a179-109a-4199-bf1d-67c30a9a8245">
+<br>
+<img height="200" width="300" width="400" alt="image" src="https://github.com/user-attachments/assets/2744c25f-cb53-4b81-afd7-02c57828448e">
+<img height="200" width="300" width="400" alt="image" src="https://github.com/user-attachments/assets/1f53a4ef-a0c1-4ce7-bbe2-33083dcb551c">
 
 #### ☑️ 클래스 예약결제( 전웅배 )
 
